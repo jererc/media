@@ -1,0 +1,63 @@
+<div player-actions ng-controller="PlayerCtrl" id="modal-player" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+
+    <div youtube-api></div>
+
+    <!-- Media overlay -->
+    <div id="media-overlay" class="media-image">
+        <div id="player"></div>
+    </div>
+
+    <!-- Media info -->
+    <div id="media-info">
+        <div class="media-info-content">
+            <span class="label label-inverse">general</span>
+            <div class="media-info-sub">
+                <ul class="unstyled">
+                    <li><strong>name:</strong> <span class="capitalize">{{media.name}}</span></li>
+                    <li><strong>category:</strong> {{media.category}}</li>
+                    <li><strong>date:</strong> {{media.date | ifDate}}</li>
+                    <li ng-show="exists(media.subtitles)"><strong>subtitles:</strong> <span>{{media.subtitles | ifList}} </span></li>
+                    <li ng-show="exists(media.path)">
+                        <strong>path:</strong>
+                        <div class="media-info-sub">
+                            <ul class="unstyled">
+                                <li ng-repeat="path in media.path">{{path}}</li>
+                            </ul>
+                        </div>
+                    </li>
+                    <li ng-show="!!media.release"><strong>release:</strong> {{media.release}}</li>
+
+                    <span ng-show="!!media.obj.session">
+                        <li>
+                            <strong>first search:</strong>
+                            <span ng-show="!!media.obj.session.first_search"> {{media.obj.session.first_search | ifDate}}</span>
+                         </li>
+                        <li>
+                            <strong>last search:</strong>
+                            <span ng-show="!!media.obj.session.last_search"> {{media.obj.session.last_search | ifDate}}</span>
+                         </li>
+                    </span>
+
+                </ul>
+            </div>
+
+            <ul ng-repeat="(key, val) in media.extra" class="unstyled">
+                <li>
+                    <span class="label label-inverse">{{key}}</span>
+                    <div class="media-info-sub">
+                        <ul ng-repeat="(key2, val2) in val" class="unstyled">
+                            <ng-show="!!val2">
+                                <ng-switch on="key2">
+                                    <li ng-switch-when="url"><a href="{{val2}}" target="_blank">Link</a></li>
+                                    <li ng-switch-default><strong>{{key2}}: </strong><span class="capitalize">{{val2 | ifList}}</span></li>
+                                </ng-switch>
+                            </ng-show>
+                        </ul>
+                    </div>
+                </li>
+            </ul>
+
+        </div>
+    </div>
+
+</div>

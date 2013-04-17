@@ -1,0 +1,72 @@
+<ng-include src="'partials/media-nav.html'"></ng-include>
+
+<ng-include src="'partials/media-modals.html'"></ng-include>
+
+<ul id="media-list" class="unstyled text-center" when-scrolled="whenScrolled()" resize-action="initGrid()">
+    <li ng-repeat="media in listView" class="thumbnail-element text-left" ng-class="{selected: media.selected}">
+
+        <ng-switch on="media != null">
+
+            <!-- Empty element -->
+            <div ng-switch-when="false" class="thumbnail-container"></div>
+
+            <div ng-switch-when="true" media-actions=".thumbnail-actions-wrapper" class="thumbnail-container thumbnail-container-loaded">
+                <span media-select class="thumbnail-title">{{media.name}}</span>
+                <div show-player class="media-image thumbnail-action"></div>
+
+                <!-- Actions -->
+                <div class="thumbnail-actions-wrapper">
+                    <div class="btn-toolbar thumbnail-actions">
+
+                        <ng-switch on="media.type">
+
+                            <div ng-switch-when="media" class="btn-group">
+                                <button open-media-modal="#modal-media-share" class="btn btn-small"><i class="icon-share-alt"></i></button>
+                                <button open-media-modal="#modal-media-add-search" ng-class="{disabled: !!media.has_search}" class="btn btn-small"><i class="icon-plus-sign"></i></button>
+                                <button open-media-modal="#modal-media-add-similar" ng-class="{disabled: !!media.has_similar}" class="btn btn-small">
+                                    <ng-switch on="media.has_similar">
+                                        <i ng-switch-when="false" class="icon-star-empty"></i>
+                                        <i ng-switch-when="true" class="icon-star"></i>
+                                    </ng-switch>
+                                </button>
+                                <button open-media-modal="#modal-media-remove" class="btn btn-small"><i class="icon-trash"></i></button>
+                            </div>
+
+                            <div ng-switch-when="release" class="btn-group">
+                                <button open-media-modal="#modal-media-add-search" ng-class="{disabled: !!media.has_search}" class="btn btn-small"><i class="icon-plus-sign"></i></button>
+                                <button open-media-modal="#modal-media-add-similar" ng-class="{disabled: !!media.has_similar}" class="btn btn-small">
+                                    <ng-switch on="media.has_similar">
+                                        <i ng-switch-when="false" class="icon-star-empty"></i>
+                                        <i ng-switch-when="true" class="icon-star"></i>
+                                    </ng-switch>
+                                </button>
+                            </div>
+
+                            <div ng-switch-when="search" class="btn-group">
+                                <button open-media-modal="#modal-media-reset-search" ng-class="{disabled: !!!media.obj.session.last_search}" class="btn btn-small"><i class="icon-refresh"></i></button>
+                                <button open-media-modal="#modal-media-add-similar" ng-class="{disabled: !!media.has_similar}" class="btn btn-small">
+                                    <ng-switch on="media.has_similar">
+                                        <i ng-switch-when="false" class="icon-star-empty"></i>
+                                        <i ng-switch-when="true" class="icon-star"></i>
+                                    </ng-switch>
+                                </button>
+                                <button open-media-modal="#modal-search-update" class="btn btn-small"><i class="icon-pencil"></i></button>
+                                <button open-media-modal="#modal-media-remove" class="btn btn-small"><i class="icon-trash"></i></button>
+                            </div>
+
+                            <div ng-switch-when="similar" class="btn-group">
+                                <button open-media-modal="#modal-similar-update" class="btn btn-small"><i class="icon-pencil"></i></button>
+                                <button open-media-modal="#modal-media-remove" class="btn btn-small"><i class="icon-trash"></i></button>
+                            </div>
+
+                        </ng-switch>
+
+                    </div>
+                </div>
+
+            </div>
+
+        </ng-switch>
+
+    </li>
+</ul>

@@ -1,0 +1,268 @@
+<div class="container">
+
+    <!-- API -->
+    <div class="well">
+        <h4>API</h4>
+
+        <form class="form-horizontal" name="updateApiUrlForm">
+            <div class="control-group">
+                <label class="control-label" for="input-api-endpoint">URL</label>
+                <div class="controls">
+                    <input ng-model="apiUrl" type="text" id="input-api-endpoint" required>
+                    <button ng-click="updateApiUrl()" ng-disabled="updateApiUrlForm.$invalid" class="btn btn-primary">Save</button>
+                </div>
+            </div>
+        </form>
+    </div>
+
+
+    <div ng-show="!!apiStatus">
+        <form class="form-horizontal" name="updateSettingsForm">
+
+            <!-- Paths -->
+            <div class="well">
+                <h4>Paths</h4>
+
+                <!-- Media root -->
+                <div class="control-group">
+                    <label class="control-label" for="input-path-media_root">Media root</label>
+                    <div class="controls">
+                        <input ng-model="settings.paths.media_root" type="text" id="input-path-media_root" required>
+                    </div>
+                </div>
+
+                <!-- Media root exclude -->
+                <div class="control-group">
+                    <label class="control-label">Media root exclude</label>
+                    <div class="controls controls-row">
+                        <div ng-repeat="opt in settings.paths.media_root_exclude" class="input-append">
+                            <input ng-model="opt.val" type="text">
+                            <a href="" ng-click="settings.paths.media_root_exclude.splice($index, 1)" class="add-on"><i class="icon-remove"></i></a>
+                        </div>
+                        <a class="btn" href="" ng-click="settings.paths.media_root_exclude.push({})"><i class="icon-plus"></i></a>
+                    </div>
+                </div>
+
+                <!-- Finished download -->
+                <div class="control-group">
+                    <label class="control-label" for="input-path-finished_download">Finished download</label>
+                    <div class="controls">
+                        <input ng-model="settings.paths.finished_download" type="text" id="input-path-finished_download" required>
+                    </div>
+                </div>
+
+                <!-- Media paths -->
+                <div ng-repeat="type in ['video', 'audio', 'image', 'misc']">
+                    <div class="control-group">
+                        <label class="control-label" for="input-path-media-{{type}}">New {{type}}</label>
+                        <div class="controls">
+                            <input ng-model="settings.paths.media[type]" type="text" id="input-path-media-{{type}}" required>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Media filters -->
+            <div class="well">
+                <h4>IMDb filters</h4>
+
+                <!-- Genres -->
+                <div ng-repeat="filter in ['include', 'exclude']">
+                    <div class="control-group">
+                        <label class="control-label">{{getFilterName('genre', filter)}}</label>
+                        <div class="controls controls-row">
+                            <div ng-repeat="opt in settings.media_filters.imdb.genre[filter]" class="input-append">
+                                <input ng-model="opt.val" class="span1" type="text">
+                                <a href="" ng-click="settings.media_filters.imdb.genre[filter].splice($index, 1)" class="add-on"><i class="icon-remove"></i></a>
+                            </div>
+                            <a class="btn" href="" ng-click="settings.media_filters.imdb.genre[filter].push({})"><i class="icon-plus"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rating -->
+                <div class="control-group">
+                    <label class="control-label" for="inputImdbRatingMin">Minimum rating</label>
+                    <div class="controls">
+                        <input ng-model="settings.media_filters.imdb.rating.min" class="span1" type="number" min="0" max="9.9" step=".1" id="inputImdbRatingMin"><span class="add-on"> / 10</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="well">
+                <h4>TVRage filters</h4>
+
+                <!-- Genres -->
+                <div ng-repeat="filter in ['include', 'exclude']">
+                    <div class="control-group">
+                        <label class="control-label">{{getFilterName('genre', filter)}}</label>
+                        <div class="controls controls-row">
+                            <div ng-repeat="opt in settings.media_filters.tvrage.genre[filter]" class="input-append">
+                                <input ng-model="opt.val" class="span1" type="text">
+                                <a href="" ng-click="settings.media_filters.tvrage.genre[filter].splice($index, 1)" class="add-on"><i class="icon-remove"></i></a>
+                            </div>
+                            <a class="btn" href="" ng-click="settings.media_filters.tvrage.genre[filter].push({})"><i class="icon-plus"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Classification -->
+                <div ng-repeat="filter in ['include', 'exclude']">
+                    <div class="control-group">
+                        <label class="control-label">{{getFilterName('classification', filter)}}</label>
+                        <div class="controls controls-row">
+                            <div ng-repeat="opt in settings.media_filters.tvrage.classification[filter]" class="input-append">
+                                <input ng-model="opt.val" class="span1" type="text">
+                                <a href="" ng-click="settings.media_filters.tvrage.classification[filter].splice($index, 1)" class="add-on"><i class="icon-remove"></i></a>
+                            </div>
+                            <a class="btn" href="" ng-click="settings.media_filters.tvrage.classification[filter].push({})"><i class="icon-plus"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="well">
+                <h4>Sputnikmusic filters</h4>
+
+                <!-- Genres -->
+                <div ng-repeat="filter in ['include', 'exclude']">
+                    <div class="control-group">
+                        <label class="control-label">{{getFilterName('genre', filter)}}</label>
+                        <div class="controls controls-row">
+                            <div ng-repeat="opt in settings.media_filters.sputnikmusic.genre[filter]" class="input-append">
+                                <input ng-model="opt.val" class="span1" type="text">
+                                <a href="" ng-click="settings.media_filters.sputnikmusic.genre[filter].splice($index, 1)" class="add-on"><i class="icon-remove"></i></a>
+                            </div>
+                            <a class="btn" href="" ng-click="settings.media_filters.sputnikmusic.genre[filter].push({})"><i class="icon-plus"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Rating -->
+                <div class="control-group">
+                    <label class="control-label" for="inputSputnikmusicRatingMin">Minimum rating</label>
+                    <div class="controls">
+                        <input ng-model="settings.media_filters.sputnikmusic.rating.min" class="span1" type="number" min="0" max="4.9" step=".1" id="inputSputnikmusicRatingMin"><span class="add-on"> / 5</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="well">
+                <h4>last.fm filters</h4>
+
+                <!-- Genres -->
+                <div ng-repeat="filter in ['include', 'exclude']">
+                    <div class="control-group">
+                        <label class="control-label">{{getFilterName('genre', filter)}}</label>
+                        <div class="controls controls-row">
+                            <div ng-repeat="opt in settings.media_filters.lastfm.genre[filter]" class="input-append">
+                                <input ng-model="opt.val" class="span1" type="text">
+                                <a href="" ng-click="settings.media_filters.lastfm.genre[filter].splice($index, 1)" class="add-on"><i class="icon-remove"></i></a>
+                            </div>
+                            <a class="btn" href="" ng-click="settings.media_filters.lastfm.genre[filter].push({})"><i class="icon-plus"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Search filters -->
+            <div ng-repeat="(category, val) in settings.search_filters" class="well">
+                <h4 class="capitalize-first">{{category}} search filters</h4>
+
+                <!-- Title -->
+                <div ng-repeat="filter in ['include_raw', 'exclude_raw']">
+                    <div class="control-group">
+                        <label class="control-label" for"input-{{category}}-{{filter}}">{{getFilterName('title', filter)}}</label>
+                        <div class="controls">
+                            <input ng-model="settings.search_filters[category][filter]" type="text" id"input-{{category}}-{{filter}}">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Size -->
+                <div ng-repeat="filter in ['size_min', 'size_max']">
+                    <div class="control-group">
+                        <label class="control-label" for"input-{{category}}-{{filter}}">{{getFilterName('file', filter)}}</label>
+                        <div class="controls">
+                            <input ng-model="settings.search_filters[category][filter]" class="span1" type="number" min="1" max="9999" id="input-{{category}}-{{filter}}"><span class="add-on"> MB</span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Media langs -->
+            <div class="well">
+                <h4>Media languages restriction</h4>
+
+                <div ng-repeat="(category, val) in settings.media_langs">
+                    <div class="control-group">
+                        <label class="control-label" for="input-media-{{category}}-langs">{{category}} langs</label>
+                        <div class="controls">
+                            <select ng-model="settings.media_langs[category]" id="input-media-{{category}}-langs" multiple="multiple">
+                                <option ng-repeat="l in langs" ng-selected="inArray(l, settings.media_langs[category])" value="{{l}}">{{langsNames[l]}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subtitles langs -->
+            <div class="well">
+                <h4>Subtitles search languages</h4>
+
+                <div class="control-group">
+                    <label class="control-label" for="input-media-subtitles-langs">Langs</label>
+                    <div class="controls">
+                        <select ng-model="settings.subtitles_langs" id="input-media-subtitles-langs" multiple="multiple">
+                            <option ng-repeat="l in langs" ng-selected="inArray(l, settings.subtitles_langs)" value="{{l}}">{{langsNames[l]}}</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Sync -->
+            <div class="well">
+                <h4>Sync</h4>
+
+                <div class="control-group">
+                    <label class="control-label" for="input-sync-recurrence">Recurrence</label>
+                    <div class="controls">
+                        <input ng-model="settings.sync.recurrence" class="span1" type="number" min="1" max="9999" id="input-sync-recurrence" required><span class="add-on"> minutes</span>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="input-sync-retry">Retry delta</label>
+                    <div class="controls">
+                        <input ng-model="settings.sync.retry_delta" class="span1" type="number" min="5" max="60" id="input-sync-retry" required><span class="add-on"> minutes</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Opensubtitles -->
+            <div class="well">
+                <h4>Opensubtitles</h4>
+
+                <div class="control-group">
+                    <label class="control-label" for="input-opensubtitles-username">Username</label>
+                    <div class="controls">
+                        <input ng-model="settings.opensubtitles.username" type="text" id="input-opensubtitles-username">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="input-opensubtitles-password">Password</label>
+                    <div class="controls">
+                        <input ng-model="settings.opensubtitles.password" type="password" id="input-opensubtitles-password">
+                    </div>
+                </div>
+            </div>
+
+            <div class="well">
+                <button class="btn btn-warning">Reset</button>
+                <button ng-click="updateSettings()" ng-disabled="updateSettingsForm.$invalid" class="btn btn-primary">Save</button>
+            </div>
+
+        </form>
+    </div>
+
+</div>

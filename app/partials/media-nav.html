@@ -1,0 +1,64 @@
+<div id="media-nav">
+
+    <!-- {{resultsCount}} results -->
+
+    <ul class="nav nav-pills">
+
+        <!-- Category -->
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                {{category.name}}
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li ng-repeat="opt in categories" ng-class="{disabled: opt == category}"><a href="" ng-click="setCategory(opt)">{{opt.name}}</a></li>
+            </ul>
+        </li>
+
+        <!-- Sort -->
+        <li class="dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                {{sort.name}}
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li ng-repeat="opt in sorts" ng-class="{disabled: opt == sort}"><a href="" ng-click="setSort(opt)">{{opt.name}}</a></li>
+            </ul>
+        </li>
+
+        <!-- Filter -->
+        <li ng-show="!query">
+            <a href="" open-media-modal="#modal-media-filter">Set filter</a>
+        </li>
+        <li ng-show="!!query" class="active dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Filter: {{query}}
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="" open-media-modal="#modal-media-filter">Edit</a></li>
+                <li><a href="" ng-click="clearFilter()">Reset</a></li>
+            </ul>
+        </li>
+
+        <!-- Selection -->
+        <li ng-show="listSelect.length > 0" class="active dropdown">
+            <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                Selection
+                <b class="caret"></b>
+            </a>
+            <ul class="dropdown-menu">
+                <li><a href="" open-media-modal="#modal-media-multi-remove">Remove</a></li>
+                <li><a href="" ng-click="clearSelect()">Reset</a></li>
+            </ul>
+        </li>
+
+    </ul>
+
+<!--
+    <ul ng-show="!!scrollToTop" class="nav nav-pills navbar-fixed-bottom pull-right">
+        <li><a href="" scroll-to-top class="pull-right">Scroll to top</a></li>
+    </ul>
+ -->
+
+</div>

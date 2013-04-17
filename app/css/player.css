@@ -1,0 +1,33 @@
+#modal-player {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    background-color: transparent;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    border-radius: 0;
+    overflow: hidden;
+}
+
+#media-overlay {
+    float: left;
+    height: 100%;
+    background-color: black;
+}
+
+#media-info {
+    float: right;
+    height: 100%;
+    overflow: scroll;
+    background-color: #fff;
+    word-wrap: break-word;
+}
+
+.media-info-content {
+    font-size: 12px;
+    padding: 2px;
+}
+
+.media-info-sub {
+    margin-left: 2px;
+}

@@ -1,0 +1,8 @@
+.accordion-heading a.accordion-toggle {
+    display: inline-block;
+}
+
+.sync-status {
+    margin-left: 8px;
+    width: 80px;
+}

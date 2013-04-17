@@ -1,0 +1,243 @@
+<div ng-controller="AddModalCtrl">
+
+    <!-- Add media modal -->
+    <div modal-focus="#inputNameMedia" id="modal-add-media" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Add media</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal" name="createMediaForm" novalidate>
+
+                <!-- Type -->
+                <div class="control-group">
+                    <label class="control-label" for="inputType">Type</label>
+                    <div class="controls">
+                        <select ng-model="media.type" required>
+                            <option value="url">URL</option>
+                            <option value="movies_artist">Movies from a director/actor</option>
+                            <option value="music_artist">Music albums from a band</option>
+                            <option value="movies">Movie</option>
+                            <option value="tv">TV show</option>
+                            <option value="anime">Anime</option>
+                            <option value="music">Music album</option>
+                            <option value="books">Book</option>
+                            <option value="games">Game</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Name -->
+                <div class="control-group">
+                    <ng-switch on="media.type">
+                        <label ng-switch-when="url" class="control-label" for="inputNameMedia">URL</label>
+                        <label ng-switch-when="movies_artist" class="control-label" for="inputNameMedia">Director or actor</label>
+                        <label ng-switch-when="music_artist" class="control-label" for="inputNameMedia">Band</label>
+                        <label ng-switch-when="movies" class="control-label" for="inputNameMedia">Movie</label>
+                        <label ng-switch-when="tv" class="control-label" for="inputNameMedia">TV show</label>
+                        <label ng-switch-when="anime" class="control-label" for="inputNameMedia">Anime</label>
+                        <label ng-switch-when="music" class="control-label" for="inputNameMedia">Band</label>
+                        <label ng-switch-when="books" class="control-label" for="inputNameMedia">Book</label>
+                        <label ng-switch-when="games" class="control-label" for="inputNameMedia">Game</label>
+                        <label ng-switch-default class="control-label" for="inputNameMedia">Name</label>
+                    </ng-switch>
+                    <div class="controls">
+                        <input ng-model="media.name" type="text" id="inputNameMedia" required>
+                    </div>
+                </div>
+
+                <!-- Music album -->
+                <ng-switch on="media.type">
+                    <div ng-switch-when="music" class="control-group">
+                        <label class="control-label" for="inputAlbum">Album</label>
+                        <div class="controls">
+                            <input ng-model="media.album" type="text" id="inputAlbum" required>
+                        </div>
+                    </div>
+                </ng-switch>
+
+                <!-- Season and episode -->
+                <ng-switch on="inArray(media.type, ['tv', 'anime'])">
+                    <div ng-switch-when="true">
+                        <div class="control-group">
+                            <label class="control-label" for="inputSeason">Season</label>
+                            <div class="controls">
+                                <input ng-model="media.season" class="span1" type="number" min="1" max="999" id="inputSeason" ng-required="inArray(media.type, ['tv'])">
+                            </div>
+                        </div>
+                        <div class="control-group">
+                            <label class="control-label" for="inputEpisode">Episode</label>
+                            <div class="controls">
+                                <input ng-model="media.episode" class="span1" type="number" min="1" max="9999" id="inputEpisode" ng-required="inArray(media.type, ['tv', 'anime'])">
+                            </div>
+                        </div>
+                    </div>
+                </ng-switch>
+
+                <!-- Search mode -->
+                <ng-switch on="!inArray(media.type, ['url', 'movies_artist', 'music_artist'])">
+                    <div ng-switch-when="true" class="control-group">
+                        <label class="control-label" for="inputMode">Search mode</label>
+                        <div class="controls">
+                            <select ng-model="media.mode" required>
+                                <option ng-repeat="m in modes" ng-selected="m == media.mode" value="{{m}}">{{modesNames[m]}}</option>
+                            </select>
+
+                        </div>
+                    </div>
+                </ng-switch>
+
+                <!-- Langs -->
+                <ng-switch on="inArray(media.type, ['movies_artist', 'movies', 'tv', 'anime', 'books', 'games'])">
+                    <div ng-switch-when="true" class="control-group">
+                        <label class="control-label" for="inputLangs">Language restriction</label>
+                        <div class="controls">
+                            <select ng-model="media.langs" id="inputLangs" multiple="multiple">
+                                <option ng-repeat="l in langs" value="{{l}}">{{langsNames[l]}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </ng-switch>
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button submit-modal="createMedia()" ng-disabled="createMediaForm.$invalid" class="btn btn-primary" data-dismiss="modal">Ok</button>
+        </div>
+    </div>
+
+    <!-- Add similar modal -->
+    <div modal-focus="#inputNameSimilar" id="modal-add-similar" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Add similar media</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal" name="createSimilarForm" novalidate>
+
+                <!-- Category -->
+                <div class="control-group">
+                    <label class="control-label" for="inputCategory">Category</label>
+                    <div class="controls">
+                        <select ng-model="similar.category" required>
+                            <option value="movies">Movies</option>
+                            <option value="tv">TV shows</option>
+                            <option value="music">Music albums</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Name -->
+                <div class="control-group">
+                    <ng-switch on="similar.category">
+                        <label ng-switch-when="movies" class="control-label" for="inputNameSimilar">Movie</label>
+                        <label ng-switch-when="tv" class="control-label" for="inputNameSimilar">TV show</label>
+                        <label ng-switch-when="music" class="control-label" for="inputNameSimilar">Band</label>
+                        <label ng-switch-default class="control-label" for="inputNameSimilar">Name</label>
+                    </ng-switch>
+                    <div class="controls">
+                        <input ng-model="similar.name" type="text" id="inputNameSimilar" required>
+                    </div>
+                </div>
+
+                <!-- Recurrence -->
+                <div class="control-group">
+                    <label class="control-label" for="inputRecurrence">Search recurrence</label>
+                    <div class="controls">
+                        <input ng-model="similar.recurrence" class="span1" type="number" min="24" max="9999" id="inputRecurrence" required><span class="add-on"> hours</span>
+                    </div>
+                </div>
+
+                <!-- Langs -->
+                <ng-switch on="inArray(similar.category, ['movies', 'tv'])">
+                    <div ng-switch-when="true" class="control-group">
+                        <label class="control-label" for="inputLangs">Language restriction</label>
+                        <div class="controls">
+                            <select ng-model="similar.langs" id="inputLangs" multiple="multiple">
+                                <option ng-repeat="l in langs" value="{{l}}">{{langsNames[l]}}</option>
+                            </select>
+                        </div>
+                    </div>
+                </ng-switch>
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button submit-modal="createSimilar()" ng-disabled="createSimilarForm.$invalid" class="btn btn-primary">Ok</button>
+        </div>
+    </div>
+
+    <!-- Add sync modal -->
+    <div modal-focus="#inputGenre" id="modal-add-sync" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+            <h3 id="myModalLabel">Add sync</h3>
+        </div>
+        <div class="modal-body">
+            <form class="form-horizontal" name="createSyncForm" novalidate>
+
+                <!-- Category -->
+                <div class="control-group">
+                    <label class="control-label" for="inputCategory">Category</label>
+                    <div class="controls">
+                        <select ng-model="sync.category" id="inputCategory" required>
+                            <option value="movies">Movies</option>
+                            <option value="tv">TV shows</option>
+                            <option value="music">Music albums</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Genres -->
+                <div ng-repeat="filter in ['genre_incl', 'genre_excl']">
+                    <div class="control-group">
+                        <label class="control-label">{{filterNames[filter]}}</label>
+                        <div class="controls controls-row">
+                            <div ng-repeat="genre in sync.parameters[filter]" class="input-append">
+                                <input ng-model="genre.val" class="span1" type="text">
+                                <a href="" ng-click="sync.parameters[filter].splice($index, 1)" class="add-on"><i class="icon-remove"></i></a>
+                            </div>
+                            <a class="btn" href="" ng-click="sync.parameters[filter].push({})"><i class="icon-plus"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Limits -->
+                <div class="control-group">
+                    <label class="control-label" for="inputCountLimit">Count limit</label>
+                    <div class="controls">
+                        <input ng-model="sync.parameters.count_max" class="span1" type="number" min="1" max="9999" id="inputCountLimit" required>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="inputSizeLimit">Size limit</label>
+                    <div class="controls">
+                        <input ng-model="sync.parameters.size_max" class="span1" type="number" min="100" max="999999" id="inputSizeLimit" required><span class="add-on"> MB</span>
+                    </div>
+                </div>
+
+                <!-- Destination -->
+                <div class="control-group">
+                    <label class="control-label" for="inputUser">Destination user</label>
+                    <div class="controls">
+                        <select ng-model="user" ng-options="u.name for u in users" id="inputUser" required></select>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="inputPath">Destination directory</label>
+                    <div class="controls">
+                        <input ng-model="sync.dst" type="text" id="inputPath" required>
+                    </div>
+                </div>
+
+            </form>
+        </div>
+        <div class="modal-footer">
+            <button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+            <button submit-modal="createSync()" ng-disabled="createSyncForm.$invalid" class="btn btn-primary">Ok</button>
+        </div>
+    </div>
+
+</div>

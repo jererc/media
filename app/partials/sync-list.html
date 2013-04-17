@@ -1,0 +1,48 @@
+<ng-include src="'partials/sync-modals.html'"></ng-include>
+
+<div class="container">
+    <div class="accordion" id="sync-accordion">
+        <div ng-repeat="sync in syncs" class="accordion-group">
+
+            <!-- Header -->
+            <div class="accordion-heading">
+                <span class="text-center label sync-status" ng-class="statusClasses[sync.status]">{{sync.status}}</span>
+                <a class="accordion-toggle" data-toggle="collapse" data-parent="#sync-accordion" href="#{{sync._id}}">{{sync.name}}</span></a>
+            </div>
+
+            <!-- Content -->
+            <div id="{{sync._id}}" class="accordion-body collapse">
+                <div class="accordion-inner">
+                    <div data-id="{{sync._id}}">
+
+                        <ul class="unstyled">
+                            <li>
+                                <strong>Processed:</strong>
+                                <span ng-show="!!sync.processed"> {{sync.processed | ifDate}}</span>
+                            </li>
+                            <li>
+                                <strong>Reserved:</strong>
+                                <span ng-show="!!sync.reserved"> {{sync.reserved | ifDate}}</span>
+                            </li>
+                            <li ng-show="!!sync.error"><strong>Error:</strong> {{sync.error}}</li>
+                            <li ng-show="!!sync.media"><strong>Files:</strong>
+                                <ul>
+                                    <li ng-repeat="file in sync.media">{{file}}</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                    </div>
+
+                    <div>
+                        <button open-sync-modal="#modal-sync-reset" ng-class="{disabled: !!!sync.reserved}" class="btn">Reset</button>
+                        <button ng-show="!!!sync.parameters.id" open-sync-modal="#modal-sync-update" class="btn btn-primary">Edit</button>
+                        <button open-sync-modal="#modal-sync-remove" class="btn btn-danger">Remove</button>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+</div>

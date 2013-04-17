@@ -1,0 +1,18 @@
+.center-content:before {
+    content: '';
+    display: inline-block;
+    height: 100%;
+    vertical-align: middle;
+}
+
+.control-label:first-letter {
+    text-transform: uppercase;
+}
+
+.capitalize {
+    text-transform: capitalize;
+}
+.capitalize-first:first-letter {
+    text-transform: uppercase;
+}
+
