@@ -4,7 +4,9 @@
 //
 // Main
 //
-function MainCtrl($rootScope, $scope, $location, $timeout, syncSvc, eventSvc, utilsSvc) {
+function MainCtrl($rootScope, $scope, $location, $timeout, apiSvc, syncSvc, eventSvc, utilsSvc) {
+
+    $rootScope.apiStatus = false;
 
     $rootScope.users = [];
     $rootScope.user;
@@ -58,6 +60,36 @@ function MainCtrl($rootScope, $scope, $location, $timeout, syncSvc, eventSvc, ut
     var usersDelta = 30000;
     var usersTimeout;
 
+    function _checkApi(url) {
+        apiSvc.checkUrl(url).
+            error(function() {
+                $rootScope.apiStatus = false;
+                $location.path('settings');
+            }).
+            success(function(data) {
+                $rootScope.apiStatus = (data.result == 'media');
+                if ($rootScope.apiStatus) {
+                    apiSvc.setUrl(url);
+                    eventSvc.emit('getSettings');
+                } else {
+                    $location.path('settings');
+                }
+            });
+    }
+
+    function checkApi(url) {
+        url = url || apiSvc.getUrl();
+        if (url) {
+            _checkApi(url);
+        } else {
+            apiSvc.getSettingsUrl().
+                success(function(data) {
+                    url = data.apiUrl || url;
+                    _checkApi(url);
+                });
+        }
+    }
+
     function updateUsers() {
         $timeout.cancel(usersTimeout);
         if (!utilsSvc.focus) {
@@ -99,11 +131,15 @@ function MainCtrl($rootScope, $scope, $location, $timeout, syncSvc, eventSvc, ut
     $rootScope.exists = function(val) {
         if (angular.isArray(val)) {
             return !!val.length;
-        } else {
-            return !!val;
         }
+        return !!val;
     };
 
+    $rootScope.$on('checkApi', function(event, args) {
+        checkApi((!!args) ? args.url : null);
+    });
+
+    checkApi();
     updateUsers();
 
 }
@@ -167,9 +203,6 @@ function AddModalCtrl($rootScope, $scope, mediaSvc, syncSvc, eventSvc, utilsSvc)
         setSyncUser();
     }
 
-    //
-    // Actions
-    //
     $scope.createMedia = function() {
         mediaSvc.createMedia($scope.media).
             success(function(data) {
@@ -206,9 +239,6 @@ function AddModalCtrl($rootScope, $scope, mediaSvc, syncSvc, eventSvc, utilsSvc)
             });
     };
 
-    //
-    // Events
-    //
     $rootScope.$on('addModalOpen', function(event, data) {
         initMediaForm();
         initSimilarForm();
@@ -290,9 +320,6 @@ function PlayerCtrl($rootScope, $scope, $timeout, eventSvc, utilsSvc) {
         }
     }
 
-    //
-    // Events
-    //
     $rootScope.$on('playerStart', function(event, data) {
         $scope.media = data.media;
         var videoId = data.media.video_id;
@@ -313,7 +340,7 @@ function PlayerCtrl($rootScope, $scope, $timeout, eventSvc, utilsSvc) {
 //
 // Media list
 //
-function MediaListCtrl($rootScope, $scope, $timeout, mediaSvc, eventSvc, utilsSvc) {
+function MediaListCtrl($rootScope, $scope, $timeout, $location, mediaSvc, eventSvc, utilsSvc) {
 
     $scope.listView = [];
     $scope.listSelect = [];
@@ -351,6 +378,7 @@ function MediaListCtrl($rootScope, $scope, $timeout, mediaSvc, eventSvc, utilsSv
             error(function() {
                 isCaching = false;
                 extendTs = utilsSvc.now();
+                $location.path('settings');
             }).
             success(function(data) {
                 isCaching = false;
@@ -360,7 +388,7 @@ function MediaListCtrl($rootScope, $scope, $timeout, mediaSvc, eventSvc, utilsSv
                     if (more) {
                         listCache.push.apply(listCache, data.result);
                     } else {
-                        utilsSvc.updateList(listCache, data.result, skip, limit);
+                        utilsSvc.updateList(listCache, data.result, 'id', skip, limit);
                     }
                     updateMediaView(!more);
                 }
@@ -453,9 +481,6 @@ function MediaListCtrl($rootScope, $scope, $timeout, mediaSvc, eventSvc, utilsSv
         }
     }
 
-    //
-    // Actions
-    //
     $scope.initGrid = function() {
         wHeight = $(window).height();
         extraRows = Math.ceil(wHeight / rHeight) + 1;
@@ -533,9 +558,6 @@ function MediaListCtrl($rootScope, $scope, $timeout, mediaSvc, eventSvc, utilsSv
         }
     };
 
-    //
-    // Events
-    //
     $rootScope.$on('loadMediaGrid', function() {
         $scope.loadGrid();
     });
@@ -612,9 +634,6 @@ function MediaModalCtrl($rootScope, $scope, mediaSvc, eventSvc, utilsSvc) {
         }
     };
 
-    //
-    // Actions
-    //
     $scope.addSearch = function() {
         mediaSvc.createMedia($scope.media).
             success(function(data) {
@@ -707,9 +726,6 @@ function MediaModalCtrl($rootScope, $scope, mediaSvc, eventSvc, utilsSvc) {
         eventSvc.emit('loadMediaGrid');
     };
 
-    //
-    // Events
-    //
     $rootScope.$on('mediaModalOpen', function(event, media) {
         $scope.media = angular.copy(media);
         setMediaInfo();
@@ -729,7 +745,7 @@ function MediaModalCtrl($rootScope, $scope, mediaSvc, eventSvc, utilsSvc) {
 //
 // Sync list
 //
-function SyncListCtrl($rootScope, $scope, $timeout, syncSvc, utilsSvc) {
+function SyncListCtrl($rootScope, $scope, $timeout, $location, syncSvc, utilsSvc) {
 
     $scope.syncs = [];
     $scope.sync;
@@ -754,17 +770,15 @@ function SyncListCtrl($rootScope, $scope, $timeout, syncSvc, utilsSvc) {
             syncSvc.listSyncs().
                 error(function() {
                     updateTimeout = $timeout(updateSyncs, cacheDelta);
+                    $location.path('settings');
                 }).
                 success(function(data) {
-                    utilsSvc.updateList($scope.syncs, data.result);
+                    utilsSvc.updateList($scope.syncs, data.result, '_id');
                     updateTimeout = $timeout(updateSyncs, cacheDelta);
                 });
         }
     }
 
-    //
-    // Events
-    //
     $rootScope.$on('updateSyncs', function() {
         updateSyncs(true);
     });
@@ -825,9 +839,6 @@ function SyncModalCtrl($rootScope, $scope, syncSvc, eventSvc, utilsSvc) {
             });
     };
 
-    //
-    // Events
-    //
     $rootScope.$on('syncModalOpen', function(event, sync) {
         $scope.sync = angular.copy(sync);
         for (var i = 0; i < $rootScope.users.length; i++) {
@@ -849,42 +860,28 @@ function SyncModalCtrl($rootScope, $scope, syncSvc, eventSvc, utilsSvc) {
 //
 function SettingsListCtrl($rootScope, $scope, apiSvc, settingsSvc, eventSvc, utilsSvc) {
 
-    $scope.apiUrl = apiSvc.getUrl();
     $scope.settings = {};
-    $scope.section = null;
 
     function getSettings() {
-        $scope.settings = {};
-        settingsSvc.listSettings().success(function(data) {
-            $scope.settings = data.result;
-            utilsSvc.formatPrimitives($scope.settings,
-                    ['include', 'exclude', 'media_root_exclude'], true);
-        });
-    }
-
-    //
-    // Actions
-    //
-    function checkApi() {
-        apiSvc.checkStatus().
+        $scope.apiUrl = apiSvc.getUrl();
+        settingsSvc.listSettings().
             error(function() {
-                $scope.apiStatus = false;
+                $scope.settings = {};
             }).
             success(function(data) {
-                $scope.apiStatus = true;
-                getSettings();
+                $scope.settings = data.result;
+                utilsSvc.formatPrimitives($scope.settings,
+                        ['include', 'exclude', 'media_root_exclude'], true);
             });
     }
 
-    $scope.updateApiUrl = function() {
-        apiSvc.setUrl($scope.apiUrl);
-        checkApi();
+    $scope.checkApi = function() {
+        eventSvc.emit('checkApi', {url: $scope.apiUrl});
     };
 
     $scope.updateSettings = function() {
         utilsSvc.formatPrimitives($scope.settings,
                 ['include', 'exclude', 'media_root_exclude']);
-
         settingsSvc.updateSettings($scope.settings).
             success(function(data) {
                 if (data.error) {
@@ -917,6 +914,8 @@ function SettingsListCtrl($rootScope, $scope, apiSvc, settingsSvc, eventSvc, uti
         }
     };
 
-    checkApi();
+    $scope.$on('getSettings', getSettings);
+
+    $scope.checkApi();
 
 }

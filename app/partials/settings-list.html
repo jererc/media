@@ -1,5 +1,9 @@
 <div class="container">
 
+    <div ng-show="!!!apiStatus" class="alert alert-error">
+        Failed to connect to the API
+    </div>
+
     <!-- API -->
     <div class="well">
         <h4>API</h4>
@@ -9,12 +13,11 @@
                 <label class="control-label" for="input-api-endpoint">URL</label>
                 <div class="controls">
                     <input ng-model="apiUrl" type="text" id="input-api-endpoint" required>
-                    <button ng-click="updateApiUrl()" ng-disabled="updateApiUrlForm.$invalid" class="btn btn-primary">Save</button>
+                    <button ng-click="checkApi()" ng-disabled="updateApiUrlForm.$invalid" class="btn btn-primary">Save</button>
                 </div>
             </div>
         </form>
     </div>
-
 
     <div ng-show="!!apiStatus">
         <form class="form-horizontal" name="updateSettingsForm">

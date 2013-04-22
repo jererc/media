@@ -9,16 +9,20 @@
     //
     services.service('apiSvc', function($http, $cookieStore) {
 
+        this.getSettingsUrl = function() {
+            return $http.get('local_settings.json');
+        };
+
         this.getUrl = function() {
-            return $cookieStore.get('apiUrl') || 'http://localhost:9000';
+            return $cookieStore.get('mediaApiUrl');
         };
 
         this.setUrl = function(url) {
-            $cookieStore.put('apiUrl', url);
+            $cookieStore.put('mediaApiUrl', url);
         };
 
-        this.checkStatus = function() {
-            return $http.get(this.getUrl() + '/status');
+        this.checkUrl = function(url) {
+            return $http.get(url + '/status');
         };
 
     });
@@ -169,16 +173,17 @@
             return -1;
         };
 
-        this.updateList = function(src, dst, skip, limit) {
+        this.updateList = function(src, dst, key, skip, limit) {
             var skip = (skip != undefined) ? skip : 0;
             var limit = (limit != undefined) ? limit : Math.max(src.length, dst.length);
+            var key = (key != undefined) ? key : 'id';
             var toRemove = 0;
             var i0;
             for (var i1 = 0; i1 < limit; i1++) {
                 i0 = i1 + skip;
                 if (src[i0] || dst[i1]) {
                     if (src[i0] && dst[i1]) {
-                        if (src[i0].id == dst[i1].id) {
+                        if (src[i0][key] == dst[i1][key]) {
                             angular.extend(src[i0], dst[i1])
                         } else {
                             src[i0] = dst[i1];
