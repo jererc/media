@@ -1,8 +1,6 @@
 'use strict';
 
-/* App Module */
-
-angular.module('mediaApp', ['mediaServices', 'mediaDirectives', 'mediaFilters']).
+angular.module('mediaApp', ['mediaServices', 'mediaDirectives', 'mediaFilters', 'angularUtils']).
     config(['$routeProvider', function($routeProvider) {
     $routeProvider.
         when('/', {redirectTo: '/media'}).

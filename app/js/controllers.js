@@ -239,7 +239,7 @@ function AddModalCtrl($rootScope, $scope, mediaSvc, syncSvc, eventSvc, utilsSvc)
             });
     };
 
-    $rootScope.$on('addModalOpen', function(event, data) {
+    $rootScope.$on('openAddModal', function(event, data) {
         initMediaForm();
         initSimilarForm();
         initSyncForm();
@@ -726,7 +726,7 @@ function MediaModalCtrl($rootScope, $scope, mediaSvc, eventSvc, utilsSvc) {
         eventSvc.emit('loadMediaGrid');
     };
 
-    $rootScope.$on('mediaModalOpen', function(event, media) {
+    $rootScope.$on('openMediaModal', function(event, media) {
         $scope.media = angular.copy(media);
         setMediaInfo();
         setUserPath();

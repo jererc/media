@@ -2,10 +2,24 @@
 
 (function() {
 
-    var playerScreenFactor = .8;
-    var playerAspectRatio = 16 / 9;
+    var PLAYER_SCREEN_FACTOR = .8;
+    var PLAYER_ASPECT_RATIO = 16 / 9;
+
 
     var directives = angular.module('mediaDirectives', []);
+
+    directives.directive('whenResized', function() {
+        return function(scope, element, attrs) {
+            $(window).resize(function() {
+                setPlayerSize();
+                scope.$eval(attrs.whenResized);
+                if (!scope.$$phase) scope.$apply();
+            });
+            scope.$on('$destroy', function() {
+                $(window).unbind('resize');
+            });
+        };
+    });
 
     directives.directive('mediaActions', function(utilsSvc) {
         return function(scope, element, attrs) {
@@ -22,47 +36,11 @@
         };
     });
 
-    directives.directive('whenScrolled', function() {
-        return function(scope, element, attrs) {
-            $(window).scroll(function() {
-                scope.$eval(attrs.whenScrolled);
-            });
-            scope.$on('$destroy', function() {
-                $(window).unbind('scroll');
-            });
-        };
-    });
-
-    directives.directive('resizeAction', function() {
-        return function(scope, element, attrs) {
-            $(window).resize(function() {
-                setPlayerSize();
-                scope.$eval(attrs.resizeAction);
-                if (!scope.$$phase) scope.$apply();
-            });
-            scope.$on('$destroy', function() {
-                $(window).unbind('resize');
-            });
-        };
-    });
-
-    directives.directive('openAddModal', function(eventSvc) {
-        return function(scope, element, attrs) {
-            element.click(function() {
-                if (!element.hasClass('disabled')) {
-                    eventSvc.emit('addModalOpen');
-                    if (!scope.$$phase) scope.$apply();
-                    $(attrs.openAddModal).modal('show');
-                }
-            });
-        };
-    });
-
     directives.directive('openMediaModal', function(eventSvc) {
         return function(scope, element, attrs) {
             element.click(function() {
                 if (!element.hasClass('disabled')) {
-                    eventSvc.emit('mediaModalOpen', scope.media);
+                    eventSvc.emit('openMediaModal', scope.media);
                     if (!scope.$$phase) scope.$apply();
                     $(attrs.openMediaModal).modal('show');
                 }
@@ -78,60 +56,6 @@
                     if (!scope.$$phase) scope.$apply();
                     $(attrs.openSyncModal).modal('show');
                 }
-            });
-        };
-    });
-
-    directives.directive('modalFocus', function() {
-        return function(scope, element, attrs) {
-            element.on('shown', function() {
-                $(attrs.modalFocus).focus();
-            });
-        };
-    });
-
-    directives.directive('submitModal', function() {
-        return function(scope, element, attrs) {
-            var modal = element.parents('.modal');
-
-            element.click(function() {
-                scope.$eval(attrs.submitModal);
-                modal.modal('hide');
-            });
-
-            modal.
-                on('shown', function() {
-                    modal.keyup(function(e) {
-                        if (e.keyCode == 13) {
-                            var form = scope[modal.find('form').attr('name')];
-                            if (!form.$invalid) {
-                                scope.$eval(attrs.submitModal);
-                                modal.modal('hide');
-                            }
-                        }
-                    })
-                }).
-                on('hidden', function() {
-                    modal.unbind('keyup');
-                });
-        };
-    });
-
-    directives.directive('clickNoDefault', function() {
-        return function(scope, element, attrs) {
-            element.click(function(event) {
-                scope.$eval(attrs.clickNoDefault);
-                event.preventDefault();
-                event.stopPropagation();
-                if (!scope.$$phase) scope.$apply();
-            });
-        };
-    });
-
-    directives.directive('scrollToTop', function() {
-        return function(scope, element, attrs) {
-            element.click(function() {
-                $('html, body').animate({scrollTop: 0}, 500);
             });
         };
     });
@@ -179,6 +103,15 @@
         };
     });
 
+    directives.directive('youtubeApi', function() {
+        return function(scope, element, attrs) {
+            var tag = document.createElement('script');
+            tag.src = '//www.youtube.com/iframe_api';
+            var firstScriptTag = document.getElementsByTagName('script')[0];
+            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+        };
+    });
+
     directives.directive('playerActions', function(eventSvc) {
         return function(scope, element, attrs) {
             element.hover(showMediaInfo, hideMediaInfo);
@@ -189,26 +122,17 @@
         };
     });
 
-    directives.directive('youtubeApi', function() {
-        return function(scope, element, attrs) {
-            var tag = document.createElement('script');
-            tag.src = '//www.youtube.com/iframe_api';
-            var firstScriptTag = document.getElementsByTagName('script')[0];
-            firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
-        };
-    });
-
 
     function setPlayerSize() {
         var sWidth = $(window).width();
         var sHeight = $(window).height();
-        var widthLimit = Math.floor(sWidth * playerScreenFactor);
-        var heightLimit = Math.floor(sHeight * playerScreenFactor);
+        var widthLimit = Math.floor(sWidth * PLAYER_SCREEN_FACTOR);
+        var heightLimit = Math.floor(sHeight * PLAYER_SCREEN_FACTOR);
 
-        var width = Math.floor(heightLimit * playerAspectRatio);
+        var width = Math.floor(heightLimit * PLAYER_ASPECT_RATIO);
         var height = heightLimit;
         if (width > widthLimit) {
-            height = Math.floor(widthLimit / playerAspectRatio);
+            height = Math.floor(widthLimit / PLAYER_ASPECT_RATIO);
             width = widthLimit;
         }
         var offsetX = Math.floor((sWidth - width) / 2);
