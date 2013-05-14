@@ -57,6 +57,14 @@
     text-transform: capitalize;
 }
 
+.thumbnail-rating {
+    position: absolute;
+    right: 2px;
+    top: 2px;
+    z-index: 101;
+    color: white;
+}
+
 .thumbnail-select {
     display: none;
     position: absolute;

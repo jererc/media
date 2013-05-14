@@ -6,7 +6,7 @@
 
             <!-- Header -->
             <div class="accordion-heading">
-                <span class="text-center label sync-status" ng-class="statusClasses[sync.status]">{{sync.status}}</span>
+                <span class="text-center label sync-status" ng-class="statusInfo[sync.status].labelClass">{{sync.status}}</span>
                 <a class="accordion-toggle" data-toggle="collapse" data-parent="#sync-accordion" href="#{{sync._id}}">{{sync.name}}</span></a>
             </div>
 
@@ -35,8 +35,8 @@
                     </div>
 
                     <div>
-                        <button open-sync-modal="#modal-sync-reset" ng-class="{disabled: !!!sync.reserved}" class="btn">Reset</button>
-                        <button ng-show="!!!sync.parameters.id" open-sync-modal="#modal-sync-update" class="btn btn-primary">Edit</button>
+                        <button ng-show="!!!sync.parameters.id" open-sync-modal="#modal-sync-update" class="btn">Edit</button>
+                        <button ng-click="resetSync(sync._id)" ng-class="{disabled: !!!sync.reserved}" class="btn btn-warning">Reset</button>
                         <button open-sync-modal="#modal-sync-remove" class="btn btn-danger">Remove</button>
                     </div>
 

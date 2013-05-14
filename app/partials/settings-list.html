@@ -63,6 +63,15 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Temp -->
+                <div class="control-group">
+                    <label class="control-label" for="input-path-tmp">Temp</label>
+                    <div class="controls">
+                        <input ng-model="settings.paths.tmp" type="text" id="input-path-tmp" required>
+                    </div>
+                </div>
+
             </div>
 
             <!-- Media filters -->
@@ -168,6 +177,18 @@
                 </div>
             </div>
 
+            <div class="well">
+                <h4>Metacritic filters</h4>
+
+                <!-- Rating -->
+                <div class="control-group">
+                    <label class="control-label" for="inputMetacriticRatingMin">Minimum rating</label>
+                    <div class="controls">
+                        <input ng-model="settings.media_filters.metacritic.rating.min" class="span1" type="number" min="0" max="99" id="inputMetacriticRatingMin"><span class="add-on"> / 100</span>
+                    </div>
+                </div>
+            </div>
+
             <!-- Search filters -->
             <div ng-repeat="(category, val) in settings.search_filters" class="well">
                 <h4 class="capitalize-first">{{category}} search filters</h4>
@@ -256,6 +277,24 @@
                     <label class="control-label" for="input-opensubtitles-password">Password</label>
                     <div class="controls">
                         <input ng-model="settings.opensubtitles.password" type="password" id="input-opensubtitles-password">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Netflix -->
+            <div class="well">
+                <h4>Netflix</h4>
+
+                <div class="control-group">
+                    <label class="control-label" for="input-netflix-username">Email</label>
+                    <div class="controls">
+                        <input ng-model="settings.netflix.username" type="text" id="input-netflix-username">
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="input-netflix-password">Password</label>
+                    <div class="controls">
+                        <input ng-model="settings.netflix.password" type="password" id="input-netflix-password">
                     </div>
                 </div>
             </div>

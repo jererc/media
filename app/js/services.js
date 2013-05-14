@@ -66,17 +66,17 @@
 
         this.resetSearch = function(id) {
             return $http.post(apiSvc.getUrl() + '/media/reset/search',
-                {id: id});
+                    {id: id});
         };
 
         this.shareMedia = function(id, user, path) {
             return $http.post(apiSvc.getUrl() + '/media/share',
-                {id: id, user: user, path: path});
+                    {id: id, user: user, path: path});
         };
 
         this.removeMedia = function(ids, type) {
             return $http.post(apiSvc.getUrl() + '/media/remove',
-                {ids: ids, type: type});
+                    {ids: ids, type: type});
         };
 
     });
@@ -105,12 +105,12 @@
 
         this.resetSync = function(id) {
             return $http.post(apiSvc.getUrl() + '/sync/reset',
-                {id: id});
+                    {id: id});
         };
 
         this.removeSync = function(id) {
             return $http.post(apiSvc.getUrl() + '/sync/remove',
-                {id: id});
+                    {id: id});
         };
 
     });

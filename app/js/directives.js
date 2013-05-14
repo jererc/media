@@ -52,7 +52,7 @@
         return function(scope, element, attrs) {
             element.click(function() {
                 if (!element.hasClass('disabled')) {
-                    eventSvc.emit('syncModalOpen', scope.sync);
+                    eventSvc.emit('openSyncModal', scope.sync);
                     if (!scope.$$phase) scope.$apply();
                     $(attrs.openSyncModal).modal('show');
                 }

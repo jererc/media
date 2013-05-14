@@ -1,7 +1,5 @@
 <div id="media-nav">
 
-    <!-- {{resultsCount}} results -->
-
     <ul class="nav nav-pills">
 
         <!-- Category -->
@@ -18,11 +16,11 @@
         <!-- Sort -->
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
-                {{sort.name}}
+                By {{sort.name}}
                 <b class="caret"></b>
             </a>
             <ul class="dropdown-menu">
-                <li ng-repeat="opt in sorts" ng-class="{disabled: opt == sort}"><a href="" ng-click="setSort(opt)">{{opt.name}}</a></li>
+                <li ng-repeat="opt in sorts" ng-class="{disabled: opt == sort}"><a href="" ng-click="setSort(opt)">By {{opt.name}}</a></li>
             </ul>
         </li>
 

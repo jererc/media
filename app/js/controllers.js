@@ -4,7 +4,7 @@
 //
 // Main
 //
-function MainCtrl($rootScope, $scope, $location, $timeout, apiSvc, syncSvc, eventSvc, utilsSvc) {
+function MainCtrl($rootScope, $scope, $location, $timeout, rootScopeSvc, apiSvc, syncSvc, eventSvc, utilsSvc) {
 
     $rootScope.apiStatus = false;
 
@@ -29,8 +29,9 @@ function MainCtrl($rootScope, $scope, $location, $timeout, apiSvc, syncSvc, even
     $rootScope.category = $rootScope.categories[0];
 
     $rootScope.sorts = [
-        {name: 'By date', value: 'date'},
-        {name: 'By name', value: 'name'},
+        {name: 'date', value: 'date'},
+        {name: 'name', value: 'name'},
+        {name: 'rating', value: 'rating'},
         ];
     $rootScope.sort = $rootScope.sorts[0];
 
@@ -112,27 +113,6 @@ function MainCtrl($rootScope, $scope, $location, $timeout, apiSvc, syncSvc, even
     $rootScope.setType = function(type) {
         $rootScope.type = type;
         eventSvc.emit('loadMediaGrid');
-    };
-
-    $rootScope.isMenuActive = function(path) {
-        if ($location.path().substr(0, path.length) == path) {
-            return 'active';
-        }
-        return '';
-    };
-
-    $rootScope.inArray = function(value, array) {
-        if (!array) {
-            return -1;
-        }
-        return utilsSvc.getIndex(value, array) != -1;
-    };
-
-    $rootScope.exists = function(val) {
-        if (angular.isArray(val)) {
-            return !!val.length;
-        }
-        return !!val;
     };
 
     $rootScope.$on('checkApi', function(event, args) {
@@ -270,10 +250,10 @@ function PlayerCtrl($rootScope, $scope, $timeout, eventSvc, utilsSvc) {
     }
 
     function onPlayerStateChange(event) {
-        if (event.data == YT.PlayerState.ENDED) {
-            eventSvc.emit('playerNextMedia');
-            if (!$scope.$$phase) $scope.$apply();
-        }
+        // if (event.data == YT.PlayerState.ENDED) {
+        //     eventSvc.emit('playerNextMedia');
+        //     if (!$scope.$$phase) $scope.$apply();
+        // }
     }
 
     function initPlayer() {
@@ -308,7 +288,7 @@ function PlayerCtrl($rootScope, $scope, $timeout, eventSvc, utilsSvc) {
     function play(id) {
         $timeout.cancel(playerTimeout);
         player.loadVideoById(id);
-        playerTimeout = $timeout(checkPlayerState, 5000);
+        // playerTimeout = $timeout(checkPlayerState, 10000);
     }
 
     function stop() {
@@ -318,6 +298,11 @@ function PlayerCtrl($rootScope, $scope, $timeout, eventSvc, utilsSvc) {
         } else if (queuedVideoId) {
             queuedVideoId = null;
         }
+    }
+
+    $scope.playNext = function() {
+        eventSvc.emit('playerNextMedia');
+        if (!$scope.$$phase) $scope.$apply();
     }
 
     $rootScope.$on('playerStart', function(event, data) {
@@ -499,7 +484,7 @@ function MediaListCtrl($rootScope, $scope, $timeout, $location, mediaSvc, eventS
         $scope.media = null;
         $scope.scrollToTop = false;
         viewBegin = 0;
-        viewEnd = 0;
+        viewEnd = -1;
         mediaIndex = 0;
         mediaPlayed = [];
 
@@ -700,7 +685,8 @@ function MediaModalCtrl($rootScope, $scope, mediaSvc, eventSvc, utilsSvc) {
                 if (data.error) {
                     console.error('failed to remove media:', data.error);
                 } else {
-                    eventSvc.emit('updateMediaCache');
+                    eventSvc.emit('clearMediaSelect');
+                    eventSvc.emit('updateMediaCache', true);
                 }
             });
     };
@@ -743,16 +729,16 @@ function MediaModalCtrl($rootScope, $scope, mediaSvc, eventSvc, utilsSvc) {
 
 
 //
-// Sync list
+// Syncs list
 //
 function SyncListCtrl($rootScope, $scope, $timeout, $location, syncSvc, utilsSvc) {
 
     $scope.syncs = [];
     $scope.sync;
 
-    $scope.statusClasses = {
-        ok: 'label-success',
-        error: 'label-error',
+    $scope.statusInfo = {
+        ok: {labelClass: 'label-success'},
+        error: {labelClass: 'label-error'},
     };
 
     var active = true;
@@ -778,6 +764,16 @@ function SyncListCtrl($rootScope, $scope, $timeout, $location, syncSvc, utilsSvc
                 });
         }
     }
+
+    $scope.resetSync = function(id) {
+        syncSvc.resetSync(id).
+            success(function(data) {
+                if (data.error) {
+                    console.error('failed to reset sync:', data.error);
+                }
+                updateSyncs(true);
+            });
+    };
 
     $rootScope.$on('updateSyncs', function() {
         updateSyncs(true);
@@ -839,7 +835,7 @@ function SyncModalCtrl($rootScope, $scope, syncSvc, eventSvc, utilsSvc) {
             });
     };
 
-    $rootScope.$on('syncModalOpen', function(event, sync) {
+    $rootScope.$on('openSyncModal', function(event, sync) {
         $scope.sync = angular.copy(sync);
         for (var i = 0; i < $rootScope.users.length; i++) {
             if ($rootScope.users[i].id == $scope.sync.user) {

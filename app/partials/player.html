@@ -10,21 +10,19 @@
     <!-- Media info -->
     <div id="media-info">
         <div class="media-info-content">
+
+            <!-- <button ng-click="playNext()" class="btn btn-small pull-right"><i class="icon-step-forward"></i></button> -->
+
+            <!-- General -->
             <span class="label label-inverse">general</span>
             <div class="media-info-sub">
                 <ul class="unstyled">
                     <li><strong>name:</strong> <span class="capitalize">{{media.name}}</span></li>
                     <li><strong>category:</strong> {{media.category}}</li>
                     <li><strong>date:</strong> {{media.date | ifDate}}</li>
+
                     <li ng-show="exists(media.subtitles)"><strong>subtitles:</strong> <span>{{media.subtitles | ifList}} </span></li>
-                    <li ng-show="exists(media.path)">
-                        <strong>path:</strong>
-                        <div class="media-info-sub">
-                            <ul class="unstyled">
-                                <li ng-repeat="path in media.path">{{path}}</li>
-                            </ul>
-                        </div>
-                    </li>
+
                     <li ng-show="!!media.release"><strong>release:</strong> {{media.release}}</li>
 
                     <span ng-show="!!media.obj.session">
@@ -39,6 +37,26 @@
                     </span>
 
                 </ul>
+            </div>
+
+            <!-- Files -->
+            <div ng-show="!!media.paths.length">
+                <span class="label label-inverse">files</span>
+                <div class="media-info-sub">
+                    <ul class="unstyled">
+                        <li ng-repeat="path in media.paths">{{path}}</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- URLs -->
+            <div ng-show="!!media.urls.length">
+                <span class="label label-inverse">play</span>
+                <div class="media-info-sub">
+                    <ul class="unstyled">
+                        <li ng-repeat="url in media.urls"><a href="{{url}}" target="_blank">{{url | truncate:60}}</a></li>
+                    </ul>
+                </div>
             </div>
 
             <ul ng-repeat="(key, val) in media.extra" class="unstyled">
