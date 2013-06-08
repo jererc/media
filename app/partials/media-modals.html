@@ -1,7 +1,7 @@
 <div ng-controller="MediaModalCtrl">
 
     <!-- Filter modal -->
-    <div modal-focus="#inputFilter" id="modal-media-filter" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div modal-focus="#input-filter" id="modal-media-filter" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">Set filter</h3>
@@ -9,9 +9,9 @@
         <form class="form-horizontal" name="filterForm">
             <div class="modal-body">
                 <div class="control-group">
-                    <label class="control-label" for="inputFilter">Filter</label>
+                    <label class="control-label" for="input-filter">Filter</label>
                     <div class="controls">
-                        <input ng-model="filter" type="text" id="inputFilter" required>
+                        <input ng-model="filter" type="text" id="input-filter" required>
                     </div>
                 </div>
             </div>
@@ -34,7 +34,7 @@
 
                 <!-- Search mode -->
                 <div class="control-group">
-                    <label class="control-label" for="inputMode">Search mode</label>
+                    <label class="control-label" for="input-mode">Search mode</label>
                     <div class="controls">
                         <select ng-model="media.mode" required>
                             <option ng-repeat="m in modes" ng-selected="m == media.mode" value="{{m}}">{{modesNames[m]}}</option>
@@ -45,9 +45,9 @@
                 <!-- Langs -->
                 <ng-switch on="inArray(media.category, ['movies', 'tv', 'anime', 'books', 'games'])">
                     <div ng-switch-when="true" class="control-group">
-                        <label class="control-label" for="inputLangs">Language restriction</label>
+                        <label class="control-label" for="input-langs">Language restriction</label>
                         <div class="controls">
-                            <select ng-model="media.langs" id="inputLangs" multiple="multiple">
+                            <select ng-model="media.langs" id="input-langs" multiple="multiple">
                                 <option ng-repeat="l in langs" ng-selected="inArray(l, media.langs)" value="{{l}}">{{langsNames[l]}}</option>
                             </select>
                         </div>
@@ -74,18 +74,18 @@
 
                 <!-- Recurrence -->
                 <div class="control-group">
-                    <label class="control-label" for="inputRecurrence">Search recurrence</label>
+                    <label class="control-label" for="input-recurrence">Search recurrence</label>
                     <div class="controls">
-                        <input ng-model="media.recurrence" class="span1" type="number" min="24" max="9999" id="inputRecurrence" required><span class="add-on"> hours</span>
+                        <input ng-model="media.recurrence" class="span1" type="number" min="24" max="9999" id="input-recurrence" required><span class="add-on"> hours</span>
                     </div>
                 </div>
 
                 <!-- Langs -->
                 <ng-switch on="inArray(media.category, ['movies', 'tv', 'anime', 'books', 'games'])">
                     <div ng-switch-when="true" class="control-group">
-                        <label class="control-label" for="inputLangs">Language restriction</label>
+                        <label class="control-label" for="input-langs">Language restriction</label>
                         <div class="controls">
-                            <select ng-model="media.langs" id="inputLangs" multiple="multiple">
+                            <select ng-model="media.langs" id="input-langs" multiple="multiple">
                                 <option ng-repeat="l in langs" ng-selected="inArray(l, media.langs)" value="{{l}}">{{langsNames[l]}}</option>
                             </select>
                         </div>
@@ -111,7 +111,7 @@
 
                 <!-- Category -->
                 <div class="control-group">
-                    <label class="control-label" for="inputCategory">Category</label>
+                    <label class="control-label" for="input-category">Category</label>
                     <div class="controls">
                         <select ng-model="media.obj.category" required>
                             <option value="movies">Movie</option>
@@ -127,23 +127,23 @@
                 <!-- Name -->
                 <div class="control-group">
                     <ng-switch on="media.obj.category">
-                        <label ng-switch-when="movies" class="control-label" for="inputName">Movie</label>
-                        <label ng-switch-when="tv" class="control-label" for="inputName">TV show</label>
-                        <label ng-switch-when="music" class="control-label" for="inputName">Band</label>
-                        <label ng-switch-when="anime" class="control-label" for="inputName">Anime</label>
-                        <label ng-switch-default class="control-label" for="inputName">Name</label>
+                        <label ng-switch-when="movies" class="control-label" for="input-name">Movie</label>
+                        <label ng-switch-when="tv" class="control-label" for="input-name">TV show</label>
+                        <label ng-switch-when="music" class="control-label" for="input-name">Band</label>
+                        <label ng-switch-when="anime" class="control-label" for="input-name">Anime</label>
+                        <label ng-switch-default class="control-label" for="input-name">Name</label>
                     </ng-switch>
                     <div class="controls">
-                        <input ng-model="media.obj.name" type="text" id="inputName" required>
+                        <input ng-model="media.obj.name" type="text" id="input-name" required>
                     </div>
                 </div>
 
                 <!-- Album -->
                 <ng-switch on="media.obj.category">
                     <div ng-switch-when="music" class="control-group">
-                        <label class="control-label" for="inputAlbum">Album</label>
+                        <label class="control-label" for="input-album">Album</label>
                         <div class="controls">
-                            <input ng-model="media.obj.album" type="text" id="inputAlbum" required>
+                            <input ng-model="media.obj.album" type="text" id="input-album" required>
                         </div>
                     </div>
                 </ng-switch>
@@ -152,15 +152,15 @@
                 <ng-switch on="inArray(media.obj.category, ['tv', 'anime'])">
                     <div ng-switch-when="true">
                         <div class="control-group">
-                            <label class="control-label" for="inputSeason">Season</label>
+                            <label class="control-label" for="input-season">Season</label>
                             <div class="controls">
-                                <input ng-model="media.obj.season" class="span1" type="number" min="1" max="999" id="inputSeason" ng-required="inArray(media.obj.category, ['tv'])">
+                                <input ng-model="media.obj.season" class="span1" type="number" min="1" max="999" id="input-season" ng-required="inArray(media.obj.category, ['tv'])">
                             </div>
                         </div>
                         <div ng-show="inArray(media.obj.category, ['tv', 'anime'])" class="control-group">
-                            <label class="control-label" for="inputEpisode">Episode</label>
+                            <label class="control-label" for="input-episode">Episode</label>
                             <div class="controls">
-                                <input ng-model="media.obj.episode" class="span1" type="number" min="1" max="9999" id="inputEpisode" ng-required="inArray(media.obj.category, ['tv', 'anime'])">
+                                <input ng-model="media.obj.episode" class="span1" type="number" min="1" max="9999" id="input-episode" ng-required="inArray(media.obj.category, ['tv', 'anime'])">
                             </div>
                         </div>
                     </div>
@@ -168,7 +168,7 @@
 
                 <!-- Search mode -->
                 <div class="control-group">
-                    <label class="control-label" for="inputMode">Search mode</label>
+                    <label class="control-label" for="input-mode">Search mode</label>
                     <div class="controls">
                         <select ng-model="media.obj.mode" required>
                             <option ng-repeat="m in modes" ng-selected="m == media.obj.mode" value="{{m}}">{{modesNames[m]}}</option>
@@ -179,14 +179,22 @@
                 <!-- Langs -->
                 <ng-switch on="inArray(media.obj.category, ['movies', 'tv', 'anime', 'books', 'games'])">
                     <div ng-switch-when="true" class="control-group">
-                        <label class="control-label" for="inputLangs">Language restriction</label>
+                        <label class="control-label" for="input-langs">Language restriction</label>
                         <div class="controls">
-                            <select ng-model="media.obj.langs" id="inputLangs" multiple="multiple">
+                            <select ng-model="media.obj.langs" id="input-langs" multiple="multiple">
                                 <option ng-repeat="l in langs" ng-selected="inArray(l, media.obj.langs)" value="{{l}}">{{langsNames[l]}}</option>
                             </select>
                         </div>
                     </div>
                 </ng-switch>
+
+                <!-- Safe -->
+                <div class="control-group">
+                    <label class="control-label" for="input-safe">Safe</label>
+                    <div class="controls">
+                        <input ng-model="media.obj.safe" class="span1" type="checkbox" id="input-safe">
+                    </div>
+                </div>
 
             </form>
         </div>
@@ -207,7 +215,7 @@
 
                 <!-- Category -->
                 <div class="control-group">
-                    <label class="control-label" for="inputCategory">Category</label>
+                    <label class="control-label" for="input-category">Category</label>
                     <div class="controls">
                         <select ng-model="media.obj.category" required>
                             <option value="movies">Movie</option>
@@ -220,31 +228,31 @@
                 <!-- Name -->
                 <div class="control-group">
                     <ng-switch on="media.obj.category">
-                        <label ng-switch-when="movies" class="control-label" for="inputName">Movie</label>
-                        <label ng-switch-when="tv" class="control-label" for="inputName">TV show</label>
-                        <label ng-switch-when="music" class="control-label" for="inputName">Band</label>
-                        <label ng-switch-when="anime" class="control-label" for="inputName">Anime</label>
-                        <label ng-switch-default class="control-label" for="inputName">Name</label>
+                        <label ng-switch-when="movies" class="control-label" for="input-name">Movie</label>
+                        <label ng-switch-when="tv" class="control-label" for="input-name">TV show</label>
+                        <label ng-switch-when="music" class="control-label" for="input-name">Band</label>
+                        <label ng-switch-when="anime" class="control-label" for="input-name">Anime</label>
+                        <label ng-switch-default class="control-label" for="input-name">Name</label>
                     </ng-switch>
                     <div class="controls">
-                        <input ng-model="media.obj.name" type="text" id="inputName" required>
+                        <input ng-model="media.obj.name" type="text" id="input-name" required>
                     </div>
                 </div>
 
                 <!-- Recurrence -->
                 <div class="control-group">
-                    <label class="control-label" for="inputRecurrence">Search recurrence</label>
+                    <label class="control-label" for="input-recurrence">Search recurrence</label>
                     <div class="controls">
-                        <input ng-model="media.obj.recurrence" class="span1" type="number" min="24" max="9999" id="inputRecurrence" required><span class="add-on"> hours</span>
+                        <input ng-model="media.obj.recurrence" class="span1" type="number" min="24" max="9999" id="input-recurrence" required><span class="add-on"> hours</span>
                     </div>
                 </div>
 
                 <!-- Langs -->
                 <ng-switch on="inArray(media.obj.category, ['movies', 'tv', 'anime', 'books', 'games'])">
                     <div ng-switch-when="true" class="control-group">
-                        <label class="control-label" for="inputLangs">Language restriction</label>
+                        <label class="control-label" for="input-langs">Language restriction</label>
                         <div class="controls">
-                            <select ng-model="media.obj.langs" id="inputLangs" multiple="multiple">
+                            <select ng-model="media.obj.langs" id="input-langs" multiple="multiple">
                                 <option ng-repeat="l in langs" ng-selected="inArray(l, media.obj.langs)" value="{{l}}">{{langsNames[l]}}</option>
                             </select>
                         </div>
@@ -277,7 +285,7 @@
     </div>
 
     <!-- Share media modal -->
-    <div modal-focus="#inputUser" id="modal-media-share" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div modal-focus="#input-user" id="modal-media-share" class="modal hide fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-header">
             <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
             <h3 id="myModalLabel">Share {{media.type}}</h3>
@@ -286,15 +294,15 @@
             <div class="modal-body">
                 <p>Share <strong>{{media.name}}</strong> with:</p>
                 <div class="control-group">
-                    <label class="control-label" for="inputUser">User</label>
+                    <label class="control-label" for="input-user">User</label>
                     <div class="controls">
-                        <select ng-model="user" ng-options="u.name for u in users" id="inputUser" required></select>
+                        <select ng-model="user" ng-options="u.name for u in users" id="input-user" required></select>
                     </div>
                 </div>
                 <div class="control-group">
-                    <label class="control-label" for="inputPath">Path</label>
+                    <label class="control-label" for="input-path">Path</label>
                     <div class="controls">
-                        <input ng-model="userPath" type="text" id="inputPath" required>
+                        <input ng-model="userPath" type="text" id="input-path" required>
                     </div>
                 </div>
             </div>

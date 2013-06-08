@@ -77,29 +77,45 @@
     directives.directive('showPlayer', function(eventSvc) {
         return function(scope, element, attrs) {
             var url = scope.media.url_thumbnail;
-            if (url) {
-                element.css('background-image', 'url("' + url + '")');
-            }
+            element.css('background-image', !!url ? 'url("' + url + '")' : 'none');
             element.click(function() {
                 eventSvc.emit('playerStart', {index: scope.$index, media: scope.media});
                 if (!scope.$$phase) scope.$apply();
-
-                if (scope.media.video_id) {
-                    $('#player').show();
-                } else {
-                    if (url) {
-                        $('#media-overlay').css('background-image', 'url("' + url + '")');
-                    } else {
-                        $('#media-overlay').css('background-image', 'none');
-                    }
-                    $('#player').hide();
-                }
-
                 showMediaInfo();
                 setPlayerSize();
                 $('body').css('overflow', 'hidden');
                 $('#modal-player').modal('show');
             });
+        };
+    });
+
+    directives.directive('playerPrevious', function(eventSvc) {
+        return function(scope, element, attrs) {
+            element.click(function() {
+                eventSvc.emit('playerPreviousMedia');
+                if (!scope.$$phase) scope.$apply();
+            });
+
+        };
+    });
+
+    directives.directive('playerNext', function(eventSvc) {
+        return function(scope, element, attrs) {
+            element.click(function() {
+                eventSvc.emit('playerNextMedia');
+                if (!scope.$$phase) scope.$apply();
+            });
+
+        };
+    });
+
+    directives.directive('playerRemove', function(eventSvc) {
+        return function(scope, element, attrs) {
+            element.click(function() {
+                eventSvc.emit('playerRemoveMedia', scope.media);
+                if (!scope.$$phase) scope.$apply();
+            });
+
         };
     });
 
