@@ -79,7 +79,7 @@
             var url = scope.media.url_thumbnail;
             element.css('background-image', !!url ? 'url("' + url + '")' : 'none');
             element.click(function() {
-                eventSvc.emit('playerStartMedia', {index: scope.$index});
+                eventSvc.emit('playerStart', scope.media);
                 if (!scope.$$phase) scope.$apply();
                 showMediaInfo();
                 setPlayerSize();
@@ -92,7 +92,7 @@
     directives.directive('playerPrevious', function(eventSvc) {
         return function(scope, element, attrs) {
             element.click(function() {
-                eventSvc.emit('playerPreviousMedia');
+                eventSvc.emit('playerNextMedia', {inc: -1, media: scope.media});
                 if (!scope.$$phase) scope.$apply();
             });
 
@@ -102,7 +102,7 @@
     directives.directive('playerNext', function(eventSvc) {
         return function(scope, element, attrs) {
             element.click(function() {
-                eventSvc.emit('playerNextMedia');
+                eventSvc.emit('playerNextMedia', {inc: 1, media: scope.media});
                 if (!scope.$$phase) scope.$apply();
             });
 

@@ -337,7 +337,6 @@ function MediaListCtrl($rootScope, $scope, $timeout, $location, mediaSvc, eventS
     var listCache, viewBegin, viewEnd, extraRows;
     var cols, firstTop, wHeight;
     var extendTs, updateTs, scrollTimeout, updateTimeout;
-    var playIndex;
 
     function getMedia(toSkip, toLimit) {
         if (!active) {
@@ -477,7 +476,6 @@ function MediaListCtrl($rootScope, $scope, $timeout, $location, mediaSvc, eventS
         $scope.scrollToTop = false;
         viewBegin = 0;
         viewEnd = -1;
-        playIndex = 0;
 
         $scope.initGrid();
         getMedia();
@@ -550,29 +548,24 @@ function MediaListCtrl($rootScope, $scope, $timeout, $location, mediaSvc, eventS
         $scope.clearSelect();
     });
 
-    $rootScope.$on('playerStartMedia', function(event, data) {
-        if (data.index < listCache.length) {
-            playIndex = data.index;
-        } else {
-            playIndex = listCache.length - 1;
+    $rootScope.$on('playerNextMedia', function(event, data) {
+        var inc = data.inc;
+        var media = data.media;
+        for (var i = 0; i < listCache.length; i++) {
+            if (listCache[i].id == media.id) {
+                if (i + inc >= 0 && i + inc < listCache.length) {
+                    eventSvc.emit('playerStart', listCache[i + inc]);
+                }
+                return false;
+            }
         }
-        eventSvc.emit('playerStart', listCache[playIndex]);
-    });
-
-    $rootScope.$on('playerPreviousMedia', function(event) {
-        if (playIndex > 0) {
-            eventSvc.emit('playerStartMedia', {index: playIndex - 1});
-        }
-    });
-
-    $rootScope.$on('playerNextMedia', function(event) {
-        if (playIndex < listCache.length - 1) {
-            eventSvc.emit('playerStartMedia', {index: playIndex + 1});
+        if (listCache.length) {
+            eventSvc.emit('playerStart', listCache[0]);
         }
     });
 
     $rootScope.$on('playerRemoveMedia', function(event, media) {
-        eventSvc.emit('playerNextMedia');
+        eventSvc.emit('playerNextMedia', {inc: 1, media: media});
 
         mediaSvc.removeMedia(media.id, media.type).
             success(function(data) {
