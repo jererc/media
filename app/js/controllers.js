@@ -291,9 +291,9 @@ function PlayerCtrl($rootScope, $scope, $timeout, eventSvc, utilsSvc) {
         }
     }
 
-    $rootScope.$on('playerStart', function(event, data) {
-        $scope.media = data.media;
-        var videoId = data.media.video_id;
+    $rootScope.$on('playerStart', function(event, media) {
+        $scope.media = media;
+        var videoId = media.video_id;
         if (videoId) {
             if (player) {
                 play(videoId);
@@ -302,10 +302,10 @@ function PlayerCtrl($rootScope, $scope, $timeout, eventSvc, utilsSvc) {
             }
             $('#player').show();
         } else {
+            var url = media.url_thumbnail;
             $('#media-overlay').css('background-image', !!url ? 'url("' + url + '")' : 'none');
             $('#player').hide();
             stop();
-            var url = data.media.url_thumbnail;
         }
     });
 
@@ -550,42 +550,35 @@ function MediaListCtrl($rootScope, $scope, $timeout, $location, mediaSvc, eventS
         $scope.clearSelect();
     });
 
-    $rootScope.$on('playerStart', function(event, data) {
+    $rootScope.$on('playerStartMedia', function(event, data) {
         if (data.index < listCache.length) {
             playIndex = data.index;
         } else {
             playIndex = listCache.length - 1;
         }
+        eventSvc.emit('playerStart', listCache[playIndex]);
     });
 
     $rootScope.$on('playerPreviousMedia', function(event) {
         if (playIndex > 0) {
-            eventSvc.emit('playerStart', {
-                    index: playIndex - 1,
-                    media: listCache[playIndex - 1],
-                });
+            eventSvc.emit('playerStartMedia', {index: playIndex - 1});
         }
     });
 
     $rootScope.$on('playerNextMedia', function(event) {
         if (playIndex < listCache.length - 1) {
-            eventSvc.emit('playerStart', {
-                    index: playIndex + 1,
-                    media: listCache[playIndex + 1],
-                });
+            eventSvc.emit('playerStartMedia', {index: playIndex + 1});
         }
     });
 
     $rootScope.$on('playerRemoveMedia', function(event, media) {
+        eventSvc.emit('playerNextMedia');
+
         mediaSvc.removeMedia(media.id, media.type).
             success(function(data) {
                 if (data.error) {
                     console.error('failed to remove media:', data.error);
                 } else {
-                    eventSvc.emit('playerStart', {
-                            index: playIndex,
-                            media: listCache[playIndex + 1],
-                        });
                     eventSvc.emit('updateMediaCache', true);
                 }
             });

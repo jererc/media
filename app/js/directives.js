@@ -79,7 +79,7 @@
             var url = scope.media.url_thumbnail;
             element.css('background-image', !!url ? 'url("' + url + '")' : 'none');
             element.click(function() {
-                eventSvc.emit('playerStart', {index: scope.$index, media: scope.media});
+                eventSvc.emit('playerStartMedia', {index: scope.$index});
                 if (!scope.$$phase) scope.$apply();
                 showMediaInfo();
                 setPlayerSize();
