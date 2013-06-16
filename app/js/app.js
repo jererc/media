@@ -9,3 +9,8 @@ angular.module('mediaApp', ['mediaServices', 'mediaDirectives', 'mediaFilters', 
         when('/settings', {templateUrl: 'partials/settings-list.html', controller: SettingsListCtrl}).
         otherwise({redirectTo: '/'});
 }]);
+
+
+angular.module('mediaApp').config(function($compileProvider){
+  $compileProvider.urlSanitizationWhitelist(/^\s*(https?|ftp|mailto|file|magnet):/);
+});

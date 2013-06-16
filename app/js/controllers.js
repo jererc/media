@@ -13,8 +13,8 @@ function MainCtrl($rootScope, $scope, $location, $timeout, rootScopeSvc, apiSvc,
 
     $rootScope.types = [
         {name: 'Media', value: 'media'},
-        {name: 'Releases', value: 'release'},
         {name: 'Searches', value: 'search'},
+        {name: 'Releases', value: 'release'},
         {name: 'Similar', value: 'similar'},
         ];
     $rootScope.type = $rootScope.types[0];
@@ -236,7 +236,7 @@ function AddModalCtrl($rootScope, $scope, mediaSvc, syncSvc, eventSvc, utilsSvc)
 //
 // Player
 //
-function PlayerCtrl($rootScope, $scope, $timeout, eventSvc, utilsSvc) {
+function PlayerCtrl($rootScope, $scope, $timeout, eventSvc, mediaSvc, utilsSvc) {
 
     var player, _player, queuedVideoId;
 
@@ -293,6 +293,18 @@ function PlayerCtrl($rootScope, $scope, $timeout, eventSvc, utilsSvc) {
 
     $rootScope.$on('playerStart', function(event, media) {
         $scope.media = media;
+
+        if (media.type == 'search') {
+            mediaSvc.getSearchResults(media.id).
+                success(function(data) {
+                    if (data.error) {
+                        console.error('failed to get search results:', data.error);
+                    } else {
+                        $scope.media.results = data.result;
+                    }
+                });
+        }
+
         var videoId = media.video_id;
         if (videoId) {
             if (player) {
@@ -347,9 +359,9 @@ function MediaListCtrl($rootScope, $scope, $timeout, $location, mediaSvc, eventS
             return false;
         }
         isCaching = true;
-
         var skip = (toSkip != undefined) ? toSkip : listCache.length;
         var limit = (toLimit != undefined) ? toLimit : cacheMin;
+        var type = $rootScope.type.value;
         mediaSvc.listMedia($rootScope.type.value, skip, limit, $rootScope.category.value, $rootScope.sort.value, $rootScope.query).
             error(function() {
                 isCaching = false;
@@ -357,10 +369,9 @@ function MediaListCtrl($rootScope, $scope, $timeout, $location, mediaSvc, eventS
                 $location.path('settings');
             }).
             success(function(data) {
-                isCaching = false;
                 if (!data.result.length) {
                     extendTs = utilsSvc.now();
-                } else {
+                } else if ($rootScope.type.value == type) {
                     if (more) {
                         listCache.push.apply(listCache, data.result);
                     } else {
@@ -368,6 +379,7 @@ function MediaListCtrl($rootScope, $scope, $timeout, $location, mediaSvc, eventS
                     }
                     updateMediaView(!more);
                 }
+                isCaching = false;
             });
     }
 
@@ -555,6 +567,9 @@ function MediaListCtrl($rootScope, $scope, $timeout, $location, mediaSvc, eventS
             if (listCache[i].id == media.id) {
                 if (i + inc >= 0 && i + inc < listCache.length) {
                     eventSvc.emit('playerStart', listCache[i + inc]);
+                }
+                if (inc > 0 && i + inc >= listCache.length - 2) {
+                    getMedia();
                 }
                 return false;
             }

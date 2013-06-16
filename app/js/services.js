@@ -56,6 +56,11 @@
             return $http.get(url);
         };
 
+        this.getSearchResults = function(id) {
+            return $http.post(apiSvc.getUrl() + '/media/search/results',
+                    {id: id});
+        };
+
         this.updateSearch = function(data) {
             return $http.post(apiSvc.getUrl() + '/media/update/search', data);
         };

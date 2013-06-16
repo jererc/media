@@ -159,9 +159,11 @@
     function showMediaInfo() {
         $('#media-info').css('width', '33%');
         $('#media-overlay').css('width', '67%');
+        $('.player-actions').show();
     }
 
     function hideMediaInfo() {
+        $('.player-actions').hide();
         $('#media-overlay').css('width', '100%');
         $('#media-info').css('width', '0%');
     }

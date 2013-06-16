@@ -68,6 +68,7 @@
                 </div>
             </div>
 
+            <!-- Extra -->
             <ul ng-repeat="(key, val) in media.extra" class="unstyled">
                 <li>
                     <span class="label label-inverse">{{key}}</span>
@@ -80,6 +81,18 @@
                                 </ng-switch>
                             </ng-show>
                         </ul>
+                    </div>
+                </li>
+            </ul>
+
+            <!-- Results -->
+            <ul ng-repeat="(key, val) in media.results" class="unstyled">
+                <li>
+                    <span class="label label-inverse">{{key}} results</span>
+                    <div class="media-info-sub">
+                        <li ng-repeat="result in val">
+                            <a href="{{result.url}}" target="_blank">{{result.title}}</a> ({{result.size}} MB<span ng-show="result.seeds != null">, {{result.seeds}} seeds</span>)
+                        </li>
                     </div>
                 </li>
             </ul>
