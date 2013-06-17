@@ -168,7 +168,7 @@
             $('#media-overlay').css({'float': 'left', 'width': '67%', 'height': '100%'});
         } else {
             $('#media-info').css({'float': 'none', 'width': '100%', 'height': '33%'});
-            $('#media-overlay').css({'float': 'none', 'width': '100%', 'height': '66%'});
+            $('#media-overlay').css({'float': 'none', 'width': '100%', 'height': '67%'});
         }
         $('.player-actions').show();
     }
