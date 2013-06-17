@@ -7,6 +7,7 @@
 function MainCtrl($rootScope, $scope, $location, $timeout, rootScopeSvc, apiSvc, syncSvc, eventSvc, utilsSvc) {
 
     $rootScope.apiStatus = false;
+    $rootScope.playerScreenFactor = utilsSvc.mobile ? .9 : .8;
 
     $rootScope.users = [];
     $rootScope.user;

@@ -10,14 +10,10 @@
 }
 
 #media-overlay {
-    float: left;
-    height: 100%;
     background-color: black;
 }
 
 #media-info {
-    float: right;
-    height: 100%;
     overflow: scroll;
     background-color: #fff;
     word-wrap: break-word;

@@ -2,16 +2,15 @@
 
 (function() {
 
-    var PLAYER_SCREEN_FACTOR = .8;
     var PLAYER_ASPECT_RATIO = 16 / 9;
-
 
     var directives = angular.module('mediaDirectives', []);
 
     directives.directive('whenResized', function() {
         return function(scope, element, attrs) {
             $(window).resize(function() {
-                setPlayerSize();
+                setPlayerSize(scope.playerScreenFactor);
+                showMediaInfo();
                 scope.$eval(attrs.whenResized);
                 if (!scope.$$phase) scope.$apply();
             });
@@ -82,7 +81,7 @@
                 eventSvc.emit('playerStart', scope.media);
                 if (!scope.$$phase) scope.$apply();
                 showMediaInfo();
-                setPlayerSize();
+                setPlayerSize(scope.playerScreenFactor);
                 $('body').css('overflow', 'hidden');
                 $('#modal-player').modal('show');
             });
@@ -95,7 +94,6 @@
                 eventSvc.emit('playerNextMedia', {inc: -1, media: scope.media});
                 if (!scope.$$phase) scope.$apply();
             });
-
         };
     });
 
@@ -115,7 +113,6 @@
                 eventSvc.emit('playerRemoveMedia', scope.media);
                 if (!scope.$$phase) scope.$apply();
             });
-
         };
     });
 
@@ -139,16 +136,25 @@
     });
 
 
-    function setPlayerSize() {
+    function getAspectRatio() {
+        if ($(window).width() > $(window).height()) {
+            return PLAYER_ASPECT_RATIO;
+        } else {
+            return 1 / PLAYER_ASPECT_RATIO;
+        }
+    }
+
+    function setPlayerSize(factor) {
         var sWidth = $(window).width();
         var sHeight = $(window).height();
-        var widthLimit = Math.floor(sWidth * PLAYER_SCREEN_FACTOR);
-        var heightLimit = Math.floor(sHeight * PLAYER_SCREEN_FACTOR);
+        var widthLimit = Math.floor(sWidth * factor);
+        var heightLimit = Math.floor(sHeight * factor);
 
-        var width = Math.floor(heightLimit * PLAYER_ASPECT_RATIO);
+        var ratio = getAspectRatio();
+        var width = Math.floor(heightLimit * ratio);
         var height = heightLimit;
         if (width > widthLimit) {
-            height = Math.floor(widthLimit / PLAYER_ASPECT_RATIO);
+            height = Math.floor(widthLimit / ratio);
             width = widthLimit;
         }
         var offsetX = Math.floor((sWidth - width) / 2);
@@ -157,15 +163,25 @@
     }
 
     function showMediaInfo() {
-        $('#media-info').css('width', '33%');
-        $('#media-overlay').css('width', '67%');
+        if (getAspectRatio() > 1) {
+            $('#media-info').css({'float': 'right', 'width': '33%', 'height': '100%'});
+            $('#media-overlay').css({'float': 'left', 'width': '67%', 'height': '100%'});
+        } else {
+            $('#media-info').css({'float': 'none', 'width': '100%', 'height': '33%'});
+            $('#media-overlay').css({'float': 'none', 'width': '100%', 'height': '66%'});
+        }
         $('.player-actions').show();
     }
 
     function hideMediaInfo() {
         $('.player-actions').hide();
-        $('#media-overlay').css('width', '100%');
-        $('#media-info').css('width', '0%');
+        if (getAspectRatio() > 1) {
+            $('#media-overlay').css({'float': 'left', 'width': '100%', 'height': '100%'});
+            $('#media-info').css({'float': 'right', 'width': '0%', 'height': '100%'});
+        } else {
+            $('#media-overlay').css({'float': 'none', 'width': '100%', 'height': '100%'});
+            $('#media-info').css({'float': 'none', 'width': '100%', 'height': '0%'});
+        }
     }
 
 })();
