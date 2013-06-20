@@ -10,7 +10,6 @@
         return function(scope, element, attrs) {
             $(window).resize(function() {
                 setPlayerSize(scope.playerScreenFactor);
-                showMediaInfo();
                 scope.$eval(attrs.whenResized);
                 if (!scope.$$phase) scope.$apply();
             });
