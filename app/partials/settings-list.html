@@ -299,6 +299,18 @@
                 </div>
             </div>
 
+            <!-- Filestube -->
+            <div class="well">
+                <h4>Filestube</h4>
+
+                <div class="control-group">
+                    <label class="control-label" for="input-filestube-api_key">API key</label>
+                    <div class="controls">
+                        <input ng-model="settings.filestube.api_key" type="text" id="input-filestube-api_key">
+                    </div>
+                </div>
+            </div>
+
             <div class="well">
                 <button class="btn btn-warning">Reset</button>
                 <button ng-click="updateSettings()" ng-disabled="updateSettingsForm.$invalid" class="btn btn-primary">Save</button>
