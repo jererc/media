@@ -331,6 +331,8 @@ function PlayerCtrl($rootScope, $scope, $timeout, eventSvc, mediaSvc, utilsSvc) 
 //
 function MediaListCtrl($rootScope, $scope, $timeout, $location, mediaSvc, eventSvc, utilsSvc) {
 
+    $rootScope.hasResult = true;
+
     $scope.listView = [];
     $scope.listSelect = [];
 
@@ -380,6 +382,11 @@ function MediaListCtrl($rootScope, $scope, $timeout, $location, mediaSvc, eventS
                     updateMediaView(!more);
                 }
                 isCaching = false;
+                if (listCache.length > 0) {
+                    $rootScope.hasResult = true;
+                } else {
+                    $rootScope.hasResult = data.result.length > 0 ? true : false;
+                }
             });
     }
 
@@ -747,6 +754,7 @@ function MediaModalCtrl($rootScope, $scope, mediaSvc, eventSvc, utilsSvc) {
 //
 function SyncListCtrl($rootScope, $scope, $timeout, $location, syncSvc, utilsSvc) {
 
+    $rootScope.hasResult = true;
     $scope.syncs = [];
     $scope.sync;
 
@@ -774,6 +782,7 @@ function SyncListCtrl($rootScope, $scope, $timeout, $location, syncSvc, utilsSvc
                 }).
                 success(function(data) {
                     utilsSvc.updateList($scope.syncs, data.result, '_id');
+                    $rootScope.hasResult = data.result.length > 0 ? true : false;
                     updateTimeout = $timeout(updateSyncs, cacheDelta);
                 });
         }

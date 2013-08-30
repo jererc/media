@@ -2,6 +2,8 @@
 
 <ng-include src="'partials/media-modals.html'"></ng-include>
 
+<div ng-show="!hasResult" class="container">No result</div>
+
 <ul id="media-list" class="unstyled text-center" when-scrolled="whenScrolled()" when-resized="initGrid()">
     <li ng-repeat="media in listView" class="thumbnail-element text-left" ng-class="{selected: media.selected}">
 

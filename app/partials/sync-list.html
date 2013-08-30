@@ -1,6 +1,9 @@
 <ng-include src="'partials/sync-modals.html'"></ng-include>
 
 <div class="container">
+
+    <div ng-show="!hasResult">No result</div>
+
     <div class="accordion" id="sync-accordion">
         <div ng-repeat="sync in syncs" class="accordion-group">
 
