@@ -57,6 +57,11 @@ function MainCtrl($rootScope, $scope, $location, $timeout, rootScopeSvc, apiSvc,
         genre_excl: 'genre exclusions',
     };
 
+    $rootScope.safeClass = {
+        true: 'icon-warning-sign',
+        false: 'icon-globe',
+    };
+
     $rootScope.similarRecurrence = 48;
 
     var usersDelta = 30000;
@@ -593,6 +598,17 @@ function MediaListCtrl($rootScope, $scope, $timeout, $location, mediaSvc, eventS
             success(function(data) {
                 if (data.error) {
                     console.error('failed to remove media:', data.error);
+                } else {
+                    eventSvc.emit('updateMediaCache', true);
+                }
+            });
+    });
+
+    $rootScope.$on('playerUpdateSearchSafe', function(event, media) {
+        mediaSvc.updateSearchSafe(media.id, !media.obj.safe).
+            success(function(data) {
+                if (data.error) {
+                    console.error('failed to update search safe:', data.error);
                 } else {
                     eventSvc.emit('updateMediaCache', true);
                 }

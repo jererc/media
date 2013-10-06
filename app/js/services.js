@@ -65,6 +65,11 @@
             return $http.post(apiSvc.getUrl() + '/media/update/search', data);
         };
 
+        this.updateSearchSafe = function(id, safe) {
+            return $http.post(apiSvc.getUrl() + '/media/update/search/safe',
+                    {id: id, safe: safe});
+        };
+
         this.updateSimilar = function(data) {
             return $http.post(apiSvc.getUrl() + '/media/update/similar', data);
         };

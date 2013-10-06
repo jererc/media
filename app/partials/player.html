@@ -15,6 +15,7 @@
             <div class="pull-right player-actions">
                 <button player-previous class="btn btn-mini btn-inverse"><i class="icon-step-backward icon-white"></i></button>
                 <button player-next class="btn btn-mini btn-inverse"><i class="icon-step-forward icon-white"></i></button>
+                <button player-search-safe ng-show="media.type == 'search'" class="btn btn-mini btn-warning"><i class="icon-white" ng-class="safeClass[!!media.obj.safe]"></i></button>
                 <button player-remove ng-show="media.type != 'release'" class="btn btn-mini btn-danger"><i class="icon-trash icon-white"></i></button>
             </div>
 

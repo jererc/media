@@ -115,6 +115,15 @@
         };
     });
 
+    directives.directive('playerSearchSafe', function(eventSvc) {
+        return function(scope, element, attrs) {
+            element.click(function() {
+                eventSvc.emit('playerUpdateSearchSafe', scope.media);
+                if (!scope.$$phase) scope.$apply();
+            });
+        };
+    });
+
     directives.directive('youtubeApi', function() {
         return function(scope, element, attrs) {
             var tag = document.createElement('script');
