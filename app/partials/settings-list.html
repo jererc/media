@@ -311,6 +311,52 @@
                 </div>
             </div>
 
+            <!-- Email -->
+            <div class="well">
+                <h4>Email query</h4>
+
+                <!-- Host -->
+                <div class="control-group">
+                    <label class="control-label" for="email-host">Host</label>
+                    <div class="controls">
+                        <input ng-model="settings.email.host" type="text" id="email-host">
+                    </div>
+                </div>
+
+                <!-- Username -->
+                <div class="control-group">
+                    <label class="control-label" for="email-username">Username</label>
+                    <div class="controls">
+                        <input ng-model="settings.email.username" type="text" id="email-username">
+                    </div>
+                </div>
+
+                <!-- Password -->
+                <div class="control-group">
+                    <label class="control-label" for="email-password">Password</label>
+                    <div class="controls">
+                        <input ng-model="settings.email.password" type="password" id="email-password">
+                    </div>
+                </div>
+
+                <!-- Port -->
+                <div class="control-group">
+                    <label class="control-label" for="email-port">Port</label>
+                    <div class="controls">
+                        <input ng-model="settings.email.port" class="span1" type="number" min="1" max="65535" id="email-port">
+                    </div>
+                </div>
+
+                <!-- From email -->
+                <div class="control-group">
+                    <label class="control-label" for="email-from_email">From email</label>
+                    <div class="controls">
+                        <input ng-model="settings.email.from_email" type="text" id="email-from_email">
+                    </div>
+                </div>
+
+            </div>
+
             <div class="well">
                 <button class="btn btn-warning">Reset</button>
                 <button ng-click="updateSettings()" ng-disabled="updateSettingsForm.$invalid" class="btn btn-primary">Save</button>
