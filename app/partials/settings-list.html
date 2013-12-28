@@ -429,6 +429,22 @@
             </div>
 
         </form>
+
+    </div>
+
+    <!-- Google API auth token -->
+    <div class="well">
+        <h4>Google API auth token</h4>
+
+        <form class="form-horizontal" name="authTokenForm">
+            <div class="control-group">
+                <label class="control-label" for="input-api-token">Token</label>
+                <div class="controls">
+                    <input ng-model="googleApiToken" type="text" id="input-api-token" required>
+                    <button ng-click="authorizeGoogleToken()" ng-disabled="authTokenForm.$invalid" class="btn btn-primary">Validate</button>
+                </div>
+            </div>
+        </form>
     </div>
 
 </div>

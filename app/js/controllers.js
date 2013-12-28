@@ -922,6 +922,15 @@ function SettingsListCtrl($rootScope, $scope, apiSvc, googleApiSvc, settingsSvc,
             });
     }
 
+    $scope.authorizeGoogleToken = function() {
+        googleApiSvc.validateAuthToken($scope.googleApiToken).
+            success(function(data) {
+                if (data.result) {
+                    getSettings();
+                }
+            });
+    };
+
     $scope.updateSettings = function() {
         utilsSvc.formatPrimitives($scope.settings,
                 ['include', 'exclude', 'media_root_exclude']);

@@ -135,6 +135,11 @@
             return $http.get(apiSvc.getUrl() + '/google_api/auth_url');
         };
 
+        this.validateAuthToken = function(token) {
+            return $http.post(apiSvc.getUrl() + '/google_api/auth_token',
+                    {token: token});
+        };
+
     });
 
     //
