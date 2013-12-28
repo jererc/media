@@ -893,9 +893,10 @@ function SyncModalCtrl($rootScope, $scope, syncSvc, eventSvc, utilsSvc) {
 //
 // Settings list
 //
-function SettingsListCtrl($rootScope, $scope, apiSvc, settingsSvc, eventSvc, utilsSvc) {
+function SettingsListCtrl($rootScope, $scope, apiSvc, googleApiSvc, settingsSvc, eventSvc, utilsSvc) {
 
     $scope.settings = {};
+    $scope.googleAuthURL = null;
 
     function getSettings() {
         settingsSvc.listSettings().
@@ -913,6 +914,13 @@ function SettingsListCtrl($rootScope, $scope, apiSvc, settingsSvc, eventSvc, uti
         $scope.apiUrl = $scope.apiUrl || apiSvc.getUrl();
         eventSvc.emit('checkApi', {url: $scope.apiUrl});
     };
+
+    function getGoogleAuthURL() {
+        googleApiSvc.getAuthURL().
+            success(function(data) {
+                $scope.googleAuthURL = data.result;
+            });
+    }
 
     $scope.updateSettings = function() {
         utilsSvc.formatPrimitives($scope.settings,
@@ -952,5 +960,7 @@ function SettingsListCtrl($rootScope, $scope, apiSvc, settingsSvc, eventSvc, uti
     $scope.$on('getSettings', getSettings);
 
     $scope.checkApi();
+
+    getGoogleAuthURL();
 
 }

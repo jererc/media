@@ -357,6 +357,72 @@
 
             </div>
 
+            <!-- Google API -->
+            <div class="well">
+                <h4>Google API</h4>
+
+                <!-- Client ID -->
+                <div class="control-group">
+                    <label class="control-label" for="google-client_id">Client ID</label>
+                    <div class="controls">
+                        <input ng-model="settings.google_api.client_id" type="text" id="google-client_id">
+                    </div>
+                </div>
+
+                <!-- Client secret -->
+                <div class="control-group">
+                    <label class="control-label" for="google-client_secret">Client secret</label>
+                    <div class="controls">
+                        <input ng-model="settings.google_api.client_secret" type="text" id="google-client_secret">
+                    </div>
+                </div>
+
+                <!-- OAuth scope -->
+                <div class="control-group">
+                    <label class="control-label" for="google-oauth_scope">OAuth scope</label>
+                    <div class="controls">
+                        <input ng-model="settings.google_api.oauth_scope" type="text" id="google-oauth_scope">
+                    </div>
+                </div>
+
+                <!-- Redirect URI -->
+                <div class="control-group">
+                    <label class="control-label" for="google-redirect_uri">Redirect URI</label>
+                    <div class="controls">
+                        <input ng-model="settings.google_api.redirect_uri" type="text" id="google-redirect_uri">
+                    </div>
+                </div>
+
+                <!-- Authorize -->
+                <div class="control-group">
+                    <label class="control-label" for="google-redirect_uri">Credentials</label>
+                    <div class="controls">
+                        <pre>{{settings.google_api_credentials.credentials || 'N/A'}}</pre>
+                    </div>
+                </div>
+                <div class="control-group">
+                    <label class="control-label" for="input-api-auth"></label>
+                    <div class="controls">
+                        <a id="input-api-auth" type="button" href="{{googleAuthURL}}" target="_blank" class="btn btn-primary">Authorize</a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Google drive -->
+            <div class="well">
+                <h4>Google Drive</h4>
+
+                <!-- File title -->
+                <div class="control-group">
+                    <label class="control-label" for="google-file_title">File title</label>
+                    <div class="controls">
+                        <input ng-model="settings.google_drive.file_title" type="text" id="google-file_title">
+                    </div>
+                </div>
+
+            </div>
+
             <div class="well">
                 <button class="btn btn-warning">Reset</button>
                 <button ng-click="updateSettings()" ng-disabled="updateSettingsForm.$invalid" class="btn btn-primary">Save</button>

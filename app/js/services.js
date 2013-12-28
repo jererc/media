@@ -127,6 +127,17 @@
 
 
     //
+    // Google API
+    //
+    services.service('googleApiSvc', function($http, apiSvc) {
+
+        this.getAuthURL = function() {
+            return $http.get(apiSvc.getUrl() + '/google_api/auth_url');
+        };
+
+    });
+
+    //
     // Settings
     //
     services.service('settingsSvc', function($http, apiSvc) {
