@@ -31,9 +31,9 @@
 
                     <li ng-show="!!media.release"><strong>release:</strong> {{media.release}}</li>
 
-                    <li ng-show="!!media.source"><strong>source:</strong> {{media.source}}</li>
-
-                    <li ng-show="!!media.obj.similar_name"><strong>source similar:</strong> {{media.obj.similar_name}}</li>
+                    <li ng-repeat="(key, val) in media.src" class="unstyled">
+                        <strong>source ({{key}}):</strong> <span class="capitalize">{{val}}</span>
+                    </li>
 
                     <span ng-show="!!media.obj.session">
                         <li>
